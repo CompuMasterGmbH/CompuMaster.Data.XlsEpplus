@@ -1,0 +1,6 @@
+*.suo
+/Ankh.Load
+packages
+obj
+/XlsEpplus.Test/bin
+*.user
