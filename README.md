@@ -3,8 +3,10 @@ Read datatables from/write to Microsoft Excel files (XLSX) with **1 line of code
 
 ## Sample for read data from XLSX files to a System.Data.DataTable
 ```vb.net
-  Dim t as System.Data.DataTable = CreateTestData()
-  t = CompuMaster.Data.XlsEpplus.ReadDataSetFromXlsFile(TempFile, True)
+  Dim t As System.Data.DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(TempFile)
+  Dim ds As System.Data.DataSet = CompuMaster.Data.XlsEpplus.ReadDataSetFromXlsFile(TempFile, True)
+  Dim SheetNames As String() = CompuMaster.Data.XlsEpplus.ReadSheetNamesFromXlsFile(TempFile)
+  Dim t2 As System.Data.DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(TempFile, SheetNames(2))
 ```
 
 ## Sample for writing data to XLSX files
