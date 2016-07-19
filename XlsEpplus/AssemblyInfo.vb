@@ -12,6 +12,8 @@ Imports System.Runtime.InteropServices
 <Assembly: Guid("14E425FC-D944-4747-A2D7-082356335D53")>
 
 <Assembly: AssemblyVersion("2.2.2016.0120")>
+<Assembly: AssemblyInformationalVersion("2.2.2016.0120-unstable")>
+
 <Assembly: AssemblyDelaySign(False)> 
 #If SIGNASSEMBLY Then
 <Assembly: AssemblyKeyFile("R:\Shared\Technik\Company Keys\camm.biz.snk")> 

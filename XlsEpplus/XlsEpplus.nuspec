@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus/master/logo_64x64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.NET library for reading/writing XLSX files</description>
+    <releaseNotes></releaseNotes>
+    <copyright>2015,2016 CompuMaster GmbH</copyright>
+    <tags>CompuMaster Data DataTable Epplus Xlsx Xls</tags>
+    <dependencies>
+      <dependency id="EPPlus" version="[$version$]" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\*.dll" />
+    <file src="bin\Release\*.pdb" />
+    <file src="bin\Release\*.xml" />
+  </files>
+</package>

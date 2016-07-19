@@ -4,3 +4,4 @@ packages
 obj
 /XlsEpplus.Test/bin
 *.user
+/XlsEpplus/bin
