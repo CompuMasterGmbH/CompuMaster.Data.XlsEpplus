@@ -29,4 +29,4 @@ Imports System.Runtime.InteropServices
 ' Sie können alle Werte angeben oder auf die standardmäßigen Build- und Revisionsnummern 
 ' zurückgreifen, indem Sie '*' wie unten angezeigt verwenden:
 
-<Assembly: AssemblyVersion("1.0.*")> 
+<Assembly: AssemblyVersion("2016.07.25.*")>

@@ -1108,7 +1108,7 @@ Namespace CompuMaster.Data
                         Case VariantType.Date
                             If fieldType Is Nothing Then
                                 fieldType = GetType(DateTime)
-                            ElseIf fieldType Is GetType(datetime) Then
+                            ElseIf fieldType Is GetType(DateTime) Then
                                 'keep it
                             Else
                                 'another value forces string-type and breaks for loop

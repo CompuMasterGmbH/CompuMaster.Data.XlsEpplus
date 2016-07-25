@@ -11,7 +11,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>CompuMaster.Test.Tools.Data</AssemblyName>
+    <AssemblyName>CompuMaster.Test.XlsEpplus</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
@@ -53,7 +53,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>CompuMaster.Test.Tools.Data.xml</DocumentationFile>
+    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -72,7 +72,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>CompuMaster.Test.Tools.Data.xml</DocumentationFile>
+    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -91,7 +91,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'NAnt|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>CompuMaster.Test.Tools.Data.xml</DocumentationFile>
+    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -109,8 +109,8 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CompuMaster.Data, Version=2.8.2016.708, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompuMaster.Data.2.8.2016.708\lib\net20\CompuMaster.Data.dll</HintPath>
+    <Reference Include="CompuMaster.Data, Version=2.8.2016.723, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompuMaster.Data.2.8.2016.723\lib\net20\CompuMaster.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
@@ -130,7 +130,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Npgsql, Version=2.2.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>..\packages\CompuMaster.Data.2.8.2016.708\lib\net20\Npgsql.dll</HintPath>
+      <HintPath>..\packages\CompuMaster.Data.2.8.2016.723\lib\net20\Npgsql.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="nunit.engine, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
