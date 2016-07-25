@@ -1,6 +1,8 @@
 # CompuMaster.Data.XlsEpplus
 Read datatables from/write to Microsoft Excel files (XLSX) with **1 line of code**
 
+[![NuGet CompuMaster.Data.XlsEpplus](https://img.shields.io/nuget/v/CompuMaster.Data.XlsEpplus.svg?label=NuGet%20CM.Data.XlsEpplus)](https://www.nuget.org/packages/CompuMaster.Data.XlsEpplus/) [![Travis](https://img.shields.io/travis/CompuMasterGmbH/CompuMaster.Data.XlsEpplus.svg?label=Build%20with%20Mono)](https://travis-ci.org/CompuMasterGmbH/CompuMaster.Data.XlsEpplus/)
+
 ## Sample for read data from XLSX files to a System.Data.DataTable
 ```vb.net
   Dim t As System.Data.DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(TempFile)
