@@ -154,6 +154,7 @@
 
 	.NOTES
 	Author: Daniel Schroeder, Jochen Wezel
+	Version: 1.6.0.1
 	
 	This script is designed to be called from PowerShell or ran directly from Windows Explorer.
 	If this script is ran without the $NuSpecFilePath, $ProjectFilePath, and $PackageFilePath parameters, it will automatically search for a .nuspec, project, or package file in the 
@@ -1110,7 +1111,7 @@ try
 	
 	# Get and display the version of NuGet.exe that will be used. If NuGet.exe is not found an exception will be thrown automatically.
 	# Create the command to use to get the Nuget Help info.
-    $helpCommand = "& ""$NuGetExecutableFilePath"" help -ForceEnglishOutput"
+    $helpCommand = "& ""$NuGetExecutableFilePath"" help"
 
 	# Get the NuGet.exe Help output.
     Write-Verbose "About to run Help command '$helpCommand'."
@@ -1130,6 +1131,25 @@ try
 	
 	# Declare the backup directory to create the NuGet Package in, as not all code paths will set it (i.e. when pushing an existing package), but we check it later.
 	$defaultDirectoryPathToPutNuGetPackageIn = $null
+
+    # Get the Source to push the package to.
+    # If the user explicitly provided the Source to push the package to, get it.
+	$rxSourceToPushPackageTo = [regex] "(?i)((-Source|-src)\s+(?<Source>.*?)(\s+|$))"
+	$match = $rxSourceToPushPackageTo.Match($PushOptions)
+	$sourceToPushPackageTo = ""
+	if ($match.Success)
+	{
+        $sourceToPushPackageTo = $match.Groups["Source"].Value
+            
+        # Strip off any quotes around the address.
+        $sourceToPushPackageTo = $sourceToPushPackageTo.Trim([char[]]@("'", '"'))
+	}
+    # Else they did not provide an explicit source to push to.
+	else
+	{
+		# So assume they are pushing to the typical default source.
+        $sourceToPushPackageTo = $DEFAULT_NUGET_SOURCE_TO_PUSH_TO
+	}
 
     # If we were not given a package file, then we need to pack something.
     if (Test-StringIsNullOrWhitespace $PackageFilePath)
@@ -1196,7 +1216,7 @@ try
 	    }
 
 	    # Create the command to use to create the package.
-	    $packCommand = "& ""$NuGetExecutableFilePath"" pack ""$fileToPack"" -Source ""$sourceToPushPackageTo"" $PackOptions -ForceEnglishOutput"
+	    $packCommand = "& ""$NuGetExecutableFilePath"" pack ""$fileToPack"" $PackOptions -ForceEnglishOutput"
 		$packCommand = $packCommand -ireplace ';', '`;'		# Escape any semicolons so they are not interpreted as the start of a new command.
 
 		# Create the package.
@@ -1227,24 +1247,6 @@ try
         # Save the Package file path to push.
         $nuGetPackageFilePath = $PackageFilePath
     }
-
-    # Get the Source to push the package to.
-    # If the user explicitly provided the Source to push the package to, get it.
-	$rxSourceToPushPackageTo = [regex] "(?i)((-Source|-src)\s+(?<Source>.*?)(\s+|$))"
-	$match = $rxSourceToPushPackageTo.Match($PushOptions)
-	if ($match.Success)
-	{
-        $sourceToPushPackageTo = $match.Groups["Source"].Value
-            
-        # Strip off any quotes around the address.
-        $sourceToPushPackageTo = $sourceToPushPackageTo.Trim([char[]]@("'", '"'))
-	}
-    # Else they did not provide an explicit source to push to.
-	else
-	{
-		# So assume they are pushing to the typical default source.
-        $sourceToPushPackageTo = $DEFAULT_NUGET_SOURCE_TO_PUSH_TO
-	}
 
 	# If the switch to push the package to the gallery was not provided and we are allowed to prompt, prompt the user if they want to push the package.
 	if (!$PushPackageToNuGetGallery -and !$NoPromptForPushPackageToNuGetGallery)
@@ -1310,7 +1312,7 @@ try
         }
 
 		# Create the command to use to push the package to the gallery.
-	    $pushCommand = "& ""$NuGetExecutableFilePath"" push ""$nuGetPackageFilePath"" $PushOptions -ForceEnglishOutput"
+	    $pushCommand = "& ""$NuGetExecutableFilePath"" push ""$nuGetPackageFilePath"" -Source ""$sourceToPushPackageTo"" $PushOptions -ForceEnglishOutput"
 		$pushCommand = $pushCommand -ireplace ';', '`;'		# Escape any semicolons so they are not interpreted as the start of a new command.
 
         # Push the package to the gallery.
