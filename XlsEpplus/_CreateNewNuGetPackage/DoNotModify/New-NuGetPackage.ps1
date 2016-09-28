@@ -153,8 +153,7 @@
 	Project home: https://newnugetpackage.codeplex.com
 
 	.NOTES
-	Author: Daniel Schroeder
-	Version: 1.5.6
+	Author: Daniel Schroeder, Jochen Wezel
 	
 	This script is designed to be called from PowerShell or ran directly from Windows Explorer.
 	If this script is ran without the $NuSpecFilePath, $ProjectFilePath, and $PackageFilePath parameters, it will automatically search for a .nuspec, project, or package file in the 
@@ -294,8 +293,8 @@ $TF_EXE_NO_PENDING_CHANGES_MESSAGE = 'There are no pending changes.'
 $TF_EXE_KEYWORD_IN_PENDING_CHANGES_MESSAGE = 'change\(s\)'	# Escape regular expression characters.
 
 # NuGet.exe output strings.
-$NUGET_EXE_SUCCESSFULLY_CREATED_PACKAGE_MESSAGE_REGEX = [regex] "(?i)(Das Paket ""(?<FilePath>.*?)"" wurde erfolgreich erstellt\.)"
-$NUGET_EXE_SUCCESSFULLY_PUSHED_PACKAGE_MESSAGE = 'bertragen.' #complete string is '{{product xy}} wird mittels Push an der NuGet-Katalog (https://www.nuget.org) übertragen... Ihr Paket wurde mittels Push übertragen.'  but contains German Umlaut character 'ü' not returned as is from NUGET call
+$NUGET_EXE_SUCCESSFULLY_CREATED_PACKAGE_MESSAGE_REGEX = [regex] "(?i)(Successfully created package '(?<FilePath>.*?)'.)"
+$NUGET_EXE_SUCCESSFULLY_PUSHED_PACKAGE_MESSAGE = 'Your package was pushed.'
 $NUGET_EXE_SUCCESSFULLY_SAVED_API_KEY_MESSAGE = "The API Key '{0}' was saved for '{1}'."
 $NUGET_EXE_SUCCESSFULLY_UPDATED_TO_NEW_VERSION = 'Update successful.'
 
@@ -1093,7 +1092,7 @@ try
 		}
 		
 		# Create the command to use to update NuGet.exe.
-	    $updateCommand = "& ""$NuGetExecutableFilePath"" update -self"
+	    $updateCommand = "& ""$NuGetExecutableFilePath"" update -self -ForceEnglishOutput"
 
 		# Have the NuGet executable try and auto-update itself.
 	    Write-Verbose "About to run Update command '$updateCommand'."
@@ -1111,7 +1110,7 @@ try
 	
 	# Get and display the version of NuGet.exe that will be used. If NuGet.exe is not found an exception will be thrown automatically.
 	# Create the command to use to get the Nuget Help info.
-    $helpCommand = "& ""$NuGetExecutableFilePath"""
+    $helpCommand = "& ""$NuGetExecutableFilePath"" help -ForceEnglishOutput"
 
 	# Get the NuGet.exe Help output.
     Write-Verbose "About to run Help command '$helpCommand'."
@@ -1197,7 +1196,7 @@ try
 	    }
 
 	    # Create the command to use to create the package.
-	    $packCommand = "& ""$NuGetExecutableFilePath"" pack ""$fileToPack"" $PackOptions"
+	    $packCommand = "& ""$NuGetExecutableFilePath"" pack ""$fileToPack"" -Source ""$sourceToPushPackageTo"" $PackOptions -ForceEnglishOutput"
 		$packCommand = $packCommand -ireplace ';', '`;'		# Escape any semicolons so they are not interpreted as the start of a new command.
 
 		# Create the package.
@@ -1311,7 +1310,7 @@ try
         }
 
 		# Create the command to use to push the package to the gallery.
-	    $pushCommand = "& ""$NuGetExecutableFilePath"" push ""$nuGetPackageFilePath"" $PushOptions"
+	    $pushCommand = "& ""$NuGetExecutableFilePath"" push ""$nuGetPackageFilePath"" $PushOptions -ForceEnglishOutput"
 		$pushCommand = $pushCommand -ireplace ';', '`;'		# Escape any semicolons so they are not interpreted as the start of a new command.
 
         # Push the package to the gallery.
@@ -1376,7 +1375,7 @@ try
 			if (($answer -is [string] -and $answer.StartsWith("Y", [System.StringComparison]::InvariantCultureIgnoreCase)) -or $answer -eq [System.Windows.Forms.DialogResult]::Yes)
 			{
 				# Create the command to use to save the Api key on this PC.
-	            $setApiKeyCommand = "& ""$NuGetExecutableFilePath"" setApiKey ""$apiKey"" -Source ""$sourceToPushPackageTo"""
+	            $setApiKeyCommand = "& ""$NuGetExecutableFilePath"" setApiKey ""$apiKey"" -Source ""$sourceToPushPackageTo"" -ForceEnglishOutput"
 				$setApiKeyCommand = $setApiKeyCommand -ireplace ';', '`;'		# Escape any semicolons so they are not interpreted as the start of a new command.
 
 				# Save the Api key on this PC.
