@@ -6,3 +6,4 @@ obj
 *.user
 /XlsEpplus/bin
 /XlsEpplus/New-NuGetPackages
+.vs

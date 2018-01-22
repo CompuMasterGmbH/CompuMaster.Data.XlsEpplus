@@ -349,7 +349,11 @@ Namespace CompuMaster.Data
                                 Else
                                     'WorkSheet.Workbook.DateTimeToNumber(datevalue)
                                     WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Value = datevalue
-                                    WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss"
+                                    If dataTable.Columns(ColCounter).ExtendedProperties.ContainsKey("Format") Then
+                                        WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Style.Numberformat.Format = CType(dataTable.Columns(ColCounter).ExtendedProperties("Format"), String)
+                                    Else
+                                        WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss"
+                                    End If
                                 End If
                             Catch ex As Exception
                                 If ErrorLevel = 0 Then
