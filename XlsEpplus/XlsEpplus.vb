@@ -277,7 +277,11 @@ Namespace CompuMaster.Data
                     Case XlsEpplus.SpecialSheet.CurrentSheet
                         sheetName = exportWorkbook.Workbook.Worksheets(exportWorkbook.Workbook.View.ActiveTab).Name
                     Case XlsEpplus.SpecialSheet.FirstSheet
-                        sheetName = exportWorkbook.Workbook.Worksheets(0).Name
+                        If exportWorkbook.Workbook.Worksheets.Count > 0 Then
+                            sheetName = exportWorkbook.Workbook.Worksheets(0).Name
+                        Else
+                            sheetName = dataTable.TableName
+                        End If
                     Case Else 'XlsEpplus.SpecialSheet.AsDefinedInSheetNamesCollection
                         sheetName = sheetnames(MyDataTableCounter)
                         If sheetName = Nothing Then sheetName = dataTable.TableName

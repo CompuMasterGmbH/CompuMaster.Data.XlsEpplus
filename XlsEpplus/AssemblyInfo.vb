@@ -6,13 +6,13 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("CompuMaster GmbH")> 
 <Assembly: AssemblyProduct("CompuMaster Tools")>
-<Assembly: AssemblyCopyright("2005-2016,2018 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2005-2016,2018,2019 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")> 
 <Assembly: CLSCompliant(True)>
 <Assembly: Guid("14E425FC-D944-4747-A2D7-082356335D53")>
 
-<Assembly: AssemblyVersion("2.2.2018.0122")>
-<Assembly: AssemblyInformationalVersion("2.2.2018.0122-beta")>
+<Assembly: AssemblyVersion("2.2.2019.0721")>
+<Assembly: AssemblyInformationalVersion("2.2.2019.0721-beta")>
 
 <Assembly: AssemblyDelaySign(False)> 
 #If SIGNASSEMBLY Then
