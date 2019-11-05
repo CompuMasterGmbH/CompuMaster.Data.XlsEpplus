@@ -1,8 +1,9 @@
 language: csharp
 solution: XlsEpplus.sln
 
-mono:
-  - latest
+#Setup of mono not required as shown in https://docs.travis-ci.com/user/languages/csharp/, testrunner callup with mono should works anyways...
+#mono:
+#  - latest
 
 addons:
   apt:
@@ -12,10 +13,11 @@ addons:
       - libmyodbc
       - libmdbodbc1 
 
-dist: trusty
+#Ubuntu 14.04 = trusty --> take a more modern distro
+#dist: trusty
 
 before_install:
-  - nuget install NUnit.Runners -Version 3.4.1 -OutputDirectory testrunner
+  - nuget install NUnit.Runners -Version 3.9.0 -OutputDirectory testrunner
 
 install:
   - nuget restore XlsEpplus.sln
@@ -24,4 +26,4 @@ script:
   - msbuild /p:Configuration=TravisCI /p:Platform="Any CPU" /p:PostBuildEvent="" XlsEpplus.sln
 
 after_script:
-  - mono ./testrunner/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./XlsEpplus.Test/bin/TravisCI/CompuMaster.Test.XlsEpplus.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./XlsEpplus.Test/bin/TravisCI/CompuMaster.Test.XlsEpplus.dll
