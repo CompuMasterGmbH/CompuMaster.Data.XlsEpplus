@@ -16,6 +16,7 @@ Namespace CompuMaster.Test.Data
             End Get
         End Property
 
+#If Not CI_Build Then
         <Test()> Public Sub SaveAndReadUnicode()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -214,6 +215,7 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(7), "SaveAndReadDBNull #28")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(8), "SaveAndReadDBNull #29")
         End Sub
+#End If
 
         Private disposedValue As Boolean = False        ' So ermitteln Sie überflüssige Aufrufe
 
