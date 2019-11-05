@@ -2,31 +2,13 @@ Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
-' Allgemeine Informationen über eine Assembly werden über die folgende 
-' Attributgruppe gesteuert. Ändern Sie diese Attributwerte, um Informationen,
-' die mit einer Assembly verknüpft sind, zu bearbeiten.
 
-' Die Werte der Assemblyattribute überprüfen
-
-<Assembly: AssemblyTitle("")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("")> 
-<Assembly: AssemblyCopyright("")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("CompuMaster.Data.XlsEpplus TestLibrary")>
+<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyCompany("CompuMaster GmbH")>
+<Assembly: AssemblyProduct("CompuMaster Tools")>
+<Assembly: AssemblyCopyright("2005-2016,2018,2019 CompuMaster GmbH")>
+<Assembly: AssemblyTrademark("camm")>
 <Assembly: CLSCompliant(True)>
-
-'Die folgende GUID ist für die ID der Typbibliothek, wenn dieses Projekt in COM angezeigt wird
 <Assembly: Guid("14D4C425-B7A2-4F73-A91B-7C1EA686B0F6")>
-
-' Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
-'
-'      Haupversion
-'      Nebenversion 
-'      Buildnummer
-'      Revisionsnummer
-'
-' Sie können alle Werte angeben oder auf die standardmäßigen Build- und Revisionsnummern 
-' zurückgreifen, indem Sie '*' wie unten angezeigt verwenden:
-
-<Assembly: AssemblyVersion("2016.07.25.*")>
+<Assembly: AssemblyVersion("2019.11.05.*")>

@@ -226,10 +226,10 @@ Namespace CompuMaster.Data
                 Throw New NotSupportedException("Excel2007 binary file format not supported yet")
             ElseIf outputPath <> Nothing AndAlso outputPath.ToLower.EndsWith(".xlsm") Then
                 'Excel 2007 macro format
-                exportWorkbook.SaveAs(New IO.FileInfo(outputPath)) ', SpreadsheetGear.FileFormat.OpenXMLWorkbookMacroEnabled)
+                exportWorkbook.SaveAs(New IO.FileInfo(outputPath))
             Else
                 'Excel 2007 standard format
-                exportWorkbook.SaveAs(New IO.FileInfo(outputPath)) ', SpreadsheetGear.FileFormat.OpenXMLWorkbook)
+                exportWorkbook.SaveAs(New IO.FileInfo(outputPath))
             End If
         End Sub
 
@@ -323,7 +323,7 @@ Namespace CompuMaster.Data
                 '#VALUE! 3 
                 '#REF! 4 
                 '#NAME? 5
-                '#NUM! 6   --> Infinity
+                '#NUM! 6   --> Infinity (Positive/Negative)
                 '#NA 7      
                 'Sonstiges #NA 
                 '{blank}    --> DBNull
@@ -334,7 +334,6 @@ Namespace CompuMaster.Data
                         Dim value As Object = dataTable.Rows(RowCounter)(ColCounter)
                         If IsDBNull(value) Then
                             WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Value = Nothing
-                            'WorkSheet.Cells(RowCounter + 1+1, ColCounter+1).Value = SpreadsheetGear.ValueType.Empty
                         ElseIf value.GetType Is GetType(String) Then
                             'Excel requires line-breaks to be an LF character only, not a windows typical CR+LF
                             Dim cell As OfficeOpenXml.ExcelRange = WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1)
@@ -347,7 +346,9 @@ Namespace CompuMaster.Data
                         ElseIf value.GetType Is GetType(DateTime) Then
                             Dim datevalue As DateTime = CType(value, DateTime)
                             Try
-                                datevalue = New DateTime(datevalue.Year, datevalue.Month, datevalue.Day, datevalue.Hour, datevalue.Minute, datevalue.Second)
+                                'Re-create datevalue to strip off any other additional properties
+                                datevalue = New DateTime(datevalue.Year, datevalue.Month, datevalue.Day, datevalue.Hour, datevalue.Minute, datevalue.Second, datevalue.Millisecond)
+                                'Write back the new cell value
                                 If datevalue = New DateTime Then
                                     WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Value = Nothing
                                 Else
@@ -432,9 +433,9 @@ Namespace CompuMaster.Data
                 Return
             Else
                 If fileFormat = FileFormat.Excel2007 Then
-                    exportWorkbook.SaveAs(outputStream) ', SpreadsheetGear.FileFormat.OpenXMLWorkbook)
+                    exportWorkbook.SaveAs(outputStream)
                 ElseIf fileFormat = FileFormat.Excel2007Macro Then
-                    exportWorkbook.SaveAs(outputStream) ', SpreadsheetGear.FileFormat.OpenXMLWorkbookMacroEnabled)
+                    exportWorkbook.SaveAs(outputStream)
                 Else
                     Throw New NotSupportedException("value for fileformat is invalid")
                 End If
@@ -466,10 +467,10 @@ Namespace CompuMaster.Data
             httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=report.xls")
             If fileFormat = FileFormat.Excel2007 Then
                 'Excel 2007 format
-                exportWorkbook.SaveAs(httpContext.Response.OutputStream) ', SpreadsheetGear.FileFormat.OpenXMLWorkbook)
+                exportWorkbook.SaveAs(httpContext.Response.OutputStream)
             ElseIf fileFormat = FileFormat.Excel2007Macro Then
                 'Excel 2007 format
-                exportWorkbook.SaveAs(httpContext.Response.OutputStream) ', SpreadsheetGear.FileFormat.OpenXMLWorkbookMacroEnabled)
+                exportWorkbook.SaveAs(httpContext.Response.OutputStream)
             Else
                 Throw New NotSupportedException("value for fileformat is invalid")
             End If
@@ -965,22 +966,22 @@ Namespace CompuMaster.Data
                 Dim row As DataRow = data.NewRow
                 For colCounter As Integer = 0 To LookupLastContentColumnIndex(sheet)
                     Dim value As Object
-                    Select Case LookupDotNetType(sheet.Cells(rowCounter + 1, colCounter + 1).Value)
+                    Select Case LookupDotNetType(sheet.Cells(rowCounter + 1, colCounter + 1))
                         Case VariantType.Empty
                             value = DBNull.Value
                         Case VariantType.Boolean
                             value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Boolean)
                         Case VariantType.Error
                             If data.Columns(colCounter).DataType Is GetType(Double) Then
-                                If CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Integer) = OfficeOpenXml.eErrorType.Div0 Then
+                                If CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, OfficeOpenXml.ExcelErrorValue).ToString = OfficeOpenXml.ExcelErrorValue.Values.Div0 Then
                                     value = Double.NaN
-                                ElseIf CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Integer) = OfficeOpenXml.eErrorType.Num Then
+                                ElseIf CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, OfficeOpenXml.ExcelErrorValue).ToString = OfficeOpenXml.ExcelErrorValue.Values.Num Then
                                     value = Double.PositiveInfinity
                                 Else
                                     value = DBNull.Value
                                 End If
                             ElseIf data.Columns(colCounter).DataType Is GetType(String) Then
-                                value = New NotImplementedException("Error in row " & (rowCounter + 1) & ", column " & (colCounter + 1) & ": cell has got error value")
+                                value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, OfficeOpenXml.ExcelErrorValue).ToString
                             Else
                                 value = DBNull.Value
                             End If
@@ -1004,7 +1005,34 @@ Namespace CompuMaster.Data
                                 cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine, , , CompareMethod.Binary)
                             End If
                             value = cellValue
+                        Case VariantType.Date
+                            If sheet.Cells(rowCounter + 1, colCounter + 1).Value.GetType Is GetType(Double) Then
+                                value = sheet.Cells(rowCounter + 1, colCounter + 1).GetValue(Of DateTime)
+                            Else
+                                value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, DateTime)
+                            End If
+                        Case VariantType.Decimal
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Decimal)
+                        Case VariantType.Char
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Char)
+                        Case VariantType.Byte
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Byte)
+                        Case VariantType.Currency
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Decimal)
+                        Case VariantType.Integer
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Integer)
+                        Case VariantType.Long
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Long)
+                        Case VariantType.Short
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Short)
+                        Case VariantType.Single
+                            value = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, Single)
                         Case Else
+                            'Case VariantType.DataObject
+                            'Case VariantType.Array
+                            'Case VariantType.Null
+                            'Case VariantType.UserDefinedType
+                            'Case VariantType.Variant
                             If data.Columns(colCounter).DataType Is GetType(String) Then
                                 value = New NotImplementedException("Error in sheet row " & (rowCounter + 1) & ", column " & (colCounter + 1) & ": Unknown cell type")
                             Else
@@ -1027,22 +1055,43 @@ Namespace CompuMaster.Data
             Return DateTime.FromOADate(value)
         End Function
 
-        Private Shared Function LookupDotNetType([object] As Object) As VariantType
-            If [object] Is Nothing Then
+        Private Shared Function LookupDotNetType(xlsCell As OfficeOpenXml.ExcelRange) As VariantType
+            If xlsCell Is Nothing OrElse xlsCell.Value Is Nothing Then
                 Return VariantType.Empty
             Else
-                Select Case [object].GetType
+                Select Case xlsCell.Value.GetType
                     Case GetType(String)
                         Return VariantType.String
                     Case GetType(Double)
-                        Return VariantType.Double
+                        If IsDateTimeFormat(xlsCell.Style.Numberformat.Format) Then
+                            Return VariantType.Date
+                        Else
+                            Return VariantType.Double
+                        End If
                     Case GetType(Boolean)
                         Return VariantType.Boolean
                     Case GetType(DateTime)
                         Return VariantType.Date
+                    Case GetType(OfficeOpenXml.ExcelErrorValue)
+                        Return VariantType.Error
                     Case Else
                         Return VariantType.Object
                 End Select
+            End If
+        End Function
+
+        ''' <summary>
+        ''' Detect custom date/time format strings which haven't been detected by Epplus
+        ''' </summary>
+        ''' <param name="cellFormat"></param>
+        ''' <returns></returns>
+        Private Shared Function IsDateTimeFormat(cellFormat As String) As Boolean
+            If cellFormat = "" Then
+                Return False
+            ElseIf cellFormat.StartsWith("yyyy-MM-dd") OrElse cellFormat.StartsWith("HH:mm:ss") Then
+                Return True
+            Else
+                Return False
             End If
         End Function
 
@@ -1079,8 +1128,18 @@ Namespace CompuMaster.Data
                 firstContentRowIndex += startReadingAtRowIndex
                 lastContentRowIndex = LookupLastContentRowIndex(sheet)
                 For RowCounter As Integer = firstContentRowIndex To lastContentRowIndex
-                    Select Case LookupDotNetType(sheet.Cells(RowCounter + 1, colCounter + 1).Value)
-                        Case VariantType.Empty, VariantType.Error
+                    Select Case LookupDotNetType(sheet.Cells(RowCounter + 1, colCounter + 1))
+                        Case VariantType.Empty
+                            'no decision here
+                        Case VariantType.Error
+                            'value forces string-type and breaks for loop
+                            Select Case CType(sheet.Cells(RowCounter + 1, colCounter + 1).Value, OfficeOpenXml.ExcelErrorValue).ToString
+                                Case OfficeOpenXml.ExcelErrorValue.Values.Div0, OfficeOpenXml.ExcelErrorValue.Values.Num
+                                    fieldType = GetType(Double)
+                                Case Else
+                                    fieldType = Nothing
+                                    Exit For
+                            End Select
                         Case VariantType.Boolean
                             If fieldType Is Nothing Then
                                 fieldType = GetType(Boolean)
@@ -1151,29 +1210,6 @@ Namespace CompuMaster.Data
         Private Shared Function CellValueAsString(ByVal cell As OfficeOpenXml.ExcelRange) As String
             Try
                 Return cell.Text
-                'Select Case cell(0, 0).ValueType
-                '    Case SpreadsheetGear.ValueType.Empty
-                '        Return Nothing
-                '    Case SpreadsheetGear.ValueType.Error
-                '        Return "#ERROR"
-                '    Case SpreadsheetGear.ValueType.Logical
-                '        Return CType(cell(0, 0).Value, Boolean).ToString
-                '    Case SpreadsheetGear.ValueType.Number
-                '        If IsDateTimeInsteadOfNumber(cell(0, 0)) = True Then
-                '            Dim datevalue As DateTime
-                '            datevalue = cell.Worksheet.Workbook.NumberToDateTime(CType(cell(0, 0).Value, Double))
-                '            'watch out for the milliseconds: the returned value may differ in milliseconds, 20.000 sec might be returned as 19.999 sec! --> round it!
-                '            Dim RoundedSeconds As Double = System.Math.Round((datevalue.Second * 1000 + datevalue.Millisecond) / 1000)
-                '            datevalue = New DateTime(datevalue.Year, datevalue.Month, datevalue.Day, datevalue.Hour, datevalue.Minute, CType(RoundedSeconds, Integer))
-                '            Return datevalue.ToString("yyyy-MM-dd HH:mm:ss")
-                '        Else
-                '            Return CType(cell(0, 0).Value, Double).ToString
-                '        End If
-                '    Case SpreadsheetGear.ValueType.Text
-                '        Return cell(0, 0).Value.ToString
-                '    Case Else
-                '        Return cell(0, 0).Value.ToString
-                'End Select
             Catch ex As Exception
                 Return "#ERROR: " & ex.Message
             End Try

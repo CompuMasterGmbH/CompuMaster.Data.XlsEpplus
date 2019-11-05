@@ -190,22 +190,18 @@ Namespace CompuMaster.Test.Data
         <Test()> Public Sub SaveAndReadDoubleSpecials()
             'Prepare test data
             Dim data As New DataTable("testtable")
-            data.Columns.Add(New DataColumn("double", GetType(Double)))
+            data.Columns.Add(New DataColumn("doubleNaN", GetType(Double)))
+            data.Columns.Add(New DataColumn("doubleNegInf", GetType(Double)))
+            data.Columns.Add(New DataColumn("doublePosInf", GetType(Double)))
+            data.Columns.Add(New DataColumn("doubleEps", GetType(Double)))
+            data.Columns.Add(New DataColumn("doubleVal", GetType(Double)))
             Dim row As DataRow
             row = data.NewRow
-            row("double") = Double.NaN
-            data.Rows.Add(row)
-            row = data.NewRow
-            row("double") = Double.NegativeInfinity
-            data.Rows.Add(row)
-            row = data.NewRow
-            row("double") = Double.PositiveInfinity
-            data.Rows.Add(row)
-            row = data.NewRow
-            row("double") = Double.Epsilon
-            data.Rows.Add(row)
-            row = data.NewRow
-            row("double") = 54246723.14521
+            row("doubleNaN") = Double.NaN
+            row("doubleNegInf") = Double.NegativeInfinity
+            row("doublePosInf") = Double.PositiveInfinity
+            row("doubleEps") = Double.Epsilon
+            row("doubleVal") = 54246723.14521
             data.Rows.Add(row)
             'Write test data
             CompuMaster.Data.XlsEpplus.WriteDataTableToXlsFile(Nothing, TempFile, data, "test")
@@ -217,15 +213,18 @@ Namespace CompuMaster.Test.Data
             'the number of columns and rows should be always 2
             Dim ReReadData As DataTable
             ReReadData = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(TempFile, "test", True)
+            Console.WriteLine(ColumnDataTypesToPlainTextTableFixedColumnWidths(ReReadData))
             Assert.AreEqual("test", ReReadData.TableName, "SaveAndReadDoubleSpecials #05")
-            Assert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadDoubleSpecials #10")
-            Assert.AreEqual("double", ReReadData.Columns(0).ColumnName, "SaveAndReadDoubleSpecials #11")
+            Assert.AreEqual(5, ReReadData.Columns.Count, "SaveAndReadDoubleSpecials #10")
+            For MyCounter As Integer = 0 To 4
+                Assert.AreEqual(GetType(System.Double), ReReadData.Columns(MyCounter).DataType, "SaveAndReadDoubleSpecials #11 with col index " & MyCounter)
+            Next
             Assert.AreEqual(GetType(Double), ReReadData.Columns(0).DataType, "SaveAndReadDoubleSpecials #12")
-            Assert.AreEqual(5, ReReadData.Rows.Count, "SaveAndReadDoubleSpecials #20")
+            Assert.AreEqual(1, ReReadData.Rows.Count, "SaveAndReadDoubleSpecials #20")
             Assert.AreEqual(Double.NaN, ReReadData.Rows(0)(0), "SaveAndReadDoubleSpecials #21")
-            Assert.AreEqual(Double.PositiveInfinity, ReReadData.Rows(1)(0), "SaveAndReadDoubleSpecials #22")
-            Assert.AreEqual(Double.PositiveInfinity, ReReadData.Rows(2)(0), "SaveAndReadDoubleSpecials #23")
-            Assert.AreEqual(Double.PositiveInfinity, ReReadData.Rows(3)(0), "SaveAndReadDoubleSpecials #24") 'roundings to just 0 in excel require a #NUM exception in excel
+            Assert.AreEqual(Double.PositiveInfinity, ReReadData.Rows(1)(0), "SaveAndReadDoubleSpecials #22") '#NUM! is considered as PositiveInfinity
+            Assert.AreEqual(Double.PositiveInfinity, ReReadData.Rows(2)(0), "SaveAndReadDoubleSpecials #23") '#NUM! is considered as PositiveInfinity
+            Assert.AreEqual(Double.PositiveInfinity, ReReadData.Rows(3)(0), "SaveAndReadDoubleSpecials #24") '#NUM! is considered as PositiveInfinity; roundings to just 0 in excel require a #NUM exception in excel
             Assert.AreEqual(54246723.14521, ReReadData.Rows(4)(0), "SaveAndReadDoubleSpecials #25")
         End Sub
 
@@ -315,7 +314,7 @@ Namespace CompuMaster.Test.Data
             row("int64") = Int64.MinValue 'not supported, only int32!
             row("boolean") = False
             row("object") = New Object
-            row("datetime") = DateTime.MinValue
+            row("datetime") = DateTime.MaxValue
             row("double") = Double.MinValue
             data.Rows.Add(row)
             row = data.NewRow
@@ -347,7 +346,7 @@ Namespace CompuMaster.Test.Data
             row("int64") = Int64.Parse("-10000000")
             row("boolean") = False
             row("object") = DBNull.Value
-            row("datetime") = New DateTime(1575, 9, 29, 13, 50, 20, 997)
+            row("datetime") = New DateTime(1975, 9, 29, 13, 50, 20, 997)
             row("double") = Double.Parse("0")
             data.Rows.Add(row)
             'Write test data
@@ -386,7 +385,7 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(Int64.MinValue, ReReadData.Rows(0)(4), "SaveAndReadDataTypes #25")
             Assert.AreEqual(False, ReReadData.Rows(0)(5), "SaveAndReadDataTypes #26")
             Assert.AreEqual(New Object().ToString, ReReadData.Rows(0)(6), "SaveAndReadDataTypes #27")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(7), "SaveAndReadDataTypes #28")
+            Assert.AreEqual(New DateTime(9999, 12, 31, 23, 59, 59, 999), ReReadData.Rows(0)(7), "SaveAndReadDataTypes #28")
             Assert.AreEqual(Double.MinValue, ReReadData.Rows(0)(8), "SaveAndReadDataTypes #29")
             'row 2
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(1)(0), "SaveAndReadDataTypes #31")
@@ -396,7 +395,7 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(Int64.MaxValue, ReReadData.Rows(1)(4), "SaveAndReadDataTypes #35")
             Assert.AreEqual(True, ReReadData.Rows(1)(5), "SaveAndReadDataTypes #36")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(1)(6), "SaveAndReadDataTypes #37")
-            Assert.AreEqual(New DateTime(9999, 12, 31, 23, 59, 59, 0), ReReadData.Rows(1)(7), "SaveAndReadDataTypes #38")
+            Assert.AreEqual(New DateTime(9999, 12, 31, 23, 59, 59, 999), ReReadData.Rows(1)(7), "SaveAndReadDataTypes #38")
             Assert.AreEqual(Double.MaxValue, ReReadData.Rows(1)(8), "SaveAndReadDataTypes #39")
             'row 3
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(2)(0), "SaveAndReadDataTypes #41")
@@ -406,7 +405,7 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(Int64.Parse("0"), ReReadData.Rows(2)(4), "SaveAndReadDataTypes #45")
             Assert.AreEqual(False, ReReadData.Rows(2)(5), "SaveAndReadDataTypes #46")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(2)(6), "SaveAndReadDataTypes #47")
-            Assert.AreEqual(New DateTime(2005, 9, 29, 13, 50, 20, 0), ReReadData.Rows(2)(7), "SaveAndReadDataTypes #48")
+            Assert.AreEqual(New DateTime(2005, 9, 29, 13, 50, 20, 997), ReReadData.Rows(2)(7), "SaveAndReadDataTypes #48")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(2)(8), "SaveAndReadDataTypes #49")
             'row 4
             Assert.AreEqual("''apostrophes'", ReReadData.Rows(3)(0), "SaveAndReadDataTypes #51")
@@ -416,7 +415,7 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(Int64.Parse("-10000000"), ReReadData.Rows(3)(4), "SaveAndReadDataTypes #55")
             Assert.AreEqual(False, ReReadData.Rows(3)(5), "SaveAndReadDataTypes #56")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(3)(6), "SaveAndReadDataTypes #57")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(3)(7), "SaveAndReadDataTypes #58")
+            Assert.AreEqual(New DateTime(1975, 9, 29, 13, 50, 20, 997), ReReadData.Rows(3)(7), "SaveAndReadDataTypes #58")
             Assert.AreEqual(Double.Parse("0"), ReReadData.Rows(3)(8), "SaveAndReadDataTypes #59")
         End Sub
 
@@ -477,26 +476,51 @@ Namespace CompuMaster.Test.Data
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, True)
             Console.WriteLine(ColumnDataTypesToPlainTextTableFixedColumnWidths(dt))
             Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt))
-            Assert.AreEqual(18, dt.Columns.Count, "Col-Length")
+            Assert.AreEqual(27, dt.Columns.Count, "Col-Length")
             Assert.AreEqual(1, dt.Rows.Count, "Row-Length")
             Assert.AreEqual(True, dt.Rows(0)(0), "Boolean")
             Assert.AreEqual(New DateTime(1944, 12, 1), dt.Rows(0)(1), "1.12.1944")
             Assert.AreEqual(New DateTime(2144, 12, 1), dt.Rows(0)(2), "1.12.2144")
-            Assert.AreEqual(New DateTime(1900, 1, 1), dt.Rows(0)(3), "1.1.1900")
-            Assert.AreEqual("01.01.1600", dt.Rows(0)(4), "1.1.1600 always < 1900 so excel handles it as string")
-            Assert.AreEqual(New DateTime(1905, 1, 1, 15, 15, 0), dt.Rows(0)(5), "1.1.1905 15:15:00")
-            Assert.AreEqual(True, dt.Rows(0)(6), "#DIV/0")
-            Assert.AreEqual(True, dt.Rows(0)(7), "#NAME?")
-            Assert.AreEqual(True, dt.Rows(0)(8), "#WERT")
-            Assert.AreEqual(True, dt.Rows(0)(9), "#BEZUG")
-            'Assert.AreEqual(???, dt.Rows(0)(10), "circular reference partner cell #1")
-            'Assert.AreEqual(???, dt.Rows(0)(11), "circular reference partner cell #2")
-            Assert.AreEqual("test", dt.Rows(0)(12), "test")
-            Assert.AreEqual("test", dt.Rows(0)(13), "'test")
-            Assert.AreEqual("'test", dt.Rows(0)(14), "''test")
-            Assert.AreEqual(New TimeSpan(15, 15, 0), dt.Rows(0)(15), "15:15:00")
-            Assert.AreEqual(New TimeSpan(256, 25, 20), dt.Rows(0)(16), "256:25:20 alias excel-internal 10.01.1900 16:25:20")
-            Assert.AreEqual(New DateTime(2144, 12, 1), dt.Rows(0)(17), "10.01.1900 16:25:20")
+            If CType(dt.Rows(0)(3), DateTime) = New DateTime(1900, 1, 1) Then
+                'Epplus with fixed bug
+                Assert.AreEqual(New DateTime(1900, 1, 1), dt.Rows(0)(3), "1.1.1900")
+            Else
+                ''Epplus with bug (prooven with v4.5.3.2), see https://github.com/JanKallman/EPPlus/issues/574
+                Assert.AreEqual(New DateTime(1899, 12, 31), dt.Rows(0)(3), "1.1.1900 incorrectly converted by Epplus to 31.12.1899 (bug at Epplus)")
+            End If
+            Assert.AreEqual(New DateTime(9999, 12, 31), dt.Rows(0)(4), "1.1.1900")
+            Assert.AreEqual("01.01.1600", dt.Rows(0)(5), "1.1.1600 always < 1900 so excel handles it as string")
+            Assert.AreEqual(New DateTime(1905, 1, 1, 15, 15, 0), dt.Rows(0)(6), "1.1.1905 15:15:00")
+            Assert.AreEqual(Double.NaN, dt.Rows(0)(7), "#DIV/0")
+            Assert.AreEqual("#NAME?", dt.Rows(0)(8), "#NAME?")
+            Assert.AreEqual("#VALUE!", dt.Rows(0)(9), "#WERT")
+            Assert.AreEqual("#REF!", dt.Rows(0)(10), "#BEZUG")
+            Assert.AreEqual(0, dt.Rows(0)(11), "circular reference partner cell #1")
+            Assert.AreEqual(0, dt.Rows(0)(12), "circular reference partner cell #2")
+            Assert.AreEqual("test", dt.Rows(0)(13), "test")
+            Assert.AreEqual("test", dt.Rows(0)(14), "'test")
+            Assert.AreEqual("'test", dt.Rows(0)(15), "''test")
+            'Check time values
+            Dim BaseDateForAllTimeValues As DateTime
+            If CType(dt.Rows(0)(3), DateTime) = New DateTime(1900, 1, 1) Then
+                'Epplus with fixed bug
+                BaseDateForAllTimeValues = New DateTime(1900, 1, 1)
+            Else
+                'Epplus with bug (prooven with v4.5.3.2), see https://github.com/JanKallman/EPPlus/issues/574
+                BaseDateForAllTimeValues = New DateTime(1899, 12, 31)
+            End If
+            BaseDateForAllTimeValues = BaseDateForAllTimeValues.AddDays(-1) 'All time-only values start 1 day before 1900/01/01
+            Assert.AreEqual(BaseDateForAllTimeValues.Add(New TimeSpan(15, 15, 0)), dt.Rows(0)(16), "15:15:00")
+            Assert.AreEqual(BaseDateForAllTimeValues.Add(New TimeSpan(15, 35, 34)), dt.Rows(0)(17), "15:35:34")
+            Assert.AreEqual(BaseDateForAllTimeValues.Add(New TimeSpan(256, 25, 20)), dt.Rows(0)(18), "256:25:20 alias excel-internal 10.01.1900 16:25:20")
+            Assert.AreEqual(BaseDateForAllTimeValues.Add(New TimeSpan(256, 25, 20)), dt.Rows(0)(19), "256:25:20 alias excel-internal 10.01.1900 16:25:20")
+            Assert.AreEqual(2.0, dt.Rows(0)(20), "Byte 2")
+            Assert.AreEqual(1.45325, dt.Rows(0)(21), "Single 1,45325")
+            Assert.AreEqual("D", dt.Rows(0)(22), "Char D")
+            Assert.AreEqual(39211212.3434733, dt.Rows(0)(23), "Decimal 39211212,3434733")
+            Assert.AreEqual(289382.0, dt.Rows(0)(24), "Integer 289382")
+            Assert.AreEqual(2297987128.0, dt.Rows(0)(25), "Long 2297987128")
+            Assert.AreEqual(312.0, dt.Rows(0)(26), "Short 312")
         End Sub
 
         <Test()> Public Sub ReadErrorTypes()
@@ -504,33 +528,81 @@ Namespace CompuMaster.Test.Data
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, True)
             Console.WriteLine(ColumnDataTypesToPlainTextTableFixedColumnWidths(dt))
             Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt))
-            Assert.AreEqual(12, dt.Columns.Count, "Col-Length")
-            Assert.AreEqual(2, dt.Rows.Count, "Row-Length")
-            For MyCounter As Integer = 0 To 7
-                Assert.AreEqual(GetType(Double), dt.Columns(MyCounter).DataType, "all cols are number fields")
+            Assert.AreEqual(19, dt.Columns.Count, "Col-Length")
+            Assert.AreEqual(7, dt.Rows.Count, "Row-Length")
+            For MyCounter As Integer = 0 To 11
+                Select Case MyCounter
+                    Case 0, 5, 6, 11
+                        Assert.AreEqual(GetType(Double), dt.Columns(MyCounter).DataType, "cols index " & MyCounter & " should be number field, but Strings due to Error values")
+                    Case Else
+                        Assert.AreEqual(GetType(String), dt.Columns(MyCounter).DataType, "cols index " & MyCounter & " should be string field due to Error values")
+                End Select
             Next
-            For MyCounter As Integer = 8 To 11
-                Assert.AreEqual(GetType(String), dt.Columns(MyCounter).DataType, "all datatypes of err-only-cols can't be identified --> string")
-                Assert.AreEqual(True, CType(dt.Rows(0)(MyCounter), String).Contains("NotImplementedException"), "all datatypes of err-only-cols can't be identified --> string")
-                Assert.AreEqual(True, CType(dt.Rows(1)(MyCounter), String).Contains("NotImplementedException"), "all datatypes of err-only-cols can't be identified --> string")
+            For MyCounter As Integer = 12 To 18
+                Select Case MyCounter
+                    Case 12, 17
+                        Assert.AreEqual(GetType(Double), dt.Columns(MyCounter).DataType, "cols index " & MyCounter & " should be number field, but Strings due to Error values")
+                    Case 18
+                        Assert.AreEqual(GetType(String), dt.Columns(MyCounter).DataType, "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(1)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(2)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(3)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(4)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(5)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(6)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                    Case Else
+                        Assert.AreEqual(GetType(String), dt.Columns(MyCounter).DataType, "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(0)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                        Assert.AreEqual(True, CType(dt.Rows(1)(MyCounter), String).StartsWith("#"), "all datatypes of err-only-cols can't be identified --> string")
+                End Select
             Next
             Assert.AreEqual(1, dt.Rows(1)(0), "static 1 as number")
-            Assert.AreEqual(1, dt.Rows(1)(1), "static 1 as number")
-            Assert.AreEqual(1, dt.Rows(1)(2), "static 1 as number")
-            Assert.AreEqual(1, dt.Rows(1)(3), "static 1 as number")
-            Assert.AreEqual(1, dt.Rows(0)(4), "static 1 as number")
-            Assert.AreEqual(1, dt.Rows(0)(5), "static 1 as number")
+            Assert.AreEqual("1", dt.Rows(1)(1), "Static 1 As number")
+            Assert.AreEqual("1", dt.Rows(1)(2), "static 1 as number")
+            Assert.AreEqual("1", dt.Rows(1)(3), "Static 1 As number")
+            Assert.AreEqual("1", dt.Rows(1)(4), "static 1 as number")
+            Assert.AreEqual(1, dt.Rows(1)(5), "static 1 as number")
             Assert.AreEqual(1, dt.Rows(0)(6), "static 1 as number")
-            Assert.AreEqual(1, dt.Rows(0)(7), "static 1 as number")
+            Assert.AreEqual("1", dt.Rows(0)(7), "static 1 as number")
+            Assert.AreEqual("1", dt.Rows(0)(8), "static 1 as number")
+            Assert.AreEqual("1", dt.Rows(0)(9), "static 1 as number")
+            Assert.AreEqual("1", dt.Rows(0)(10), "static 1 as number")
+            Assert.AreEqual(1, dt.Rows(0)(11), "static 1 as number")
             'TODO: compare expected results with MSExcelOleDbProvider
+            '1st or 2nd line cells with errors
             Assert.AreEqual(Double.NaN, dt.Rows(0)(0), "#DIV/0")
-            Assert.AreEqual(DBNull.Value, dt.Rows(0)(1), "#NAME?")
-            Assert.AreEqual(DBNull.Value, dt.Rows(0)(2), "#WERT")
-            Assert.AreEqual(DBNull.Value, dt.Rows(0)(3), "#BEZUG!")
-            Assert.AreEqual(Double.NaN, dt.Rows(1)(4), "#DIV/0")
-            Assert.AreEqual(DBNull.Value, dt.Rows(1)(5), "#NAME?")
-            Assert.AreEqual(DBNull.Value, dt.Rows(1)(6), "#WERT")
-            Assert.AreEqual(DBNull.Value, dt.Rows(1)(7), "#BEZUG!")
+            Assert.AreEqual("#NAME?", dt.Rows(0)(1), "#NAME?")
+            Assert.AreEqual("#VALUE!", dt.Rows(0)(2), "#WERT")
+            Assert.AreEqual("#REF!", dt.Rows(0)(3), "#BEZUG!")
+            Assert.AreEqual("#N/A", dt.Rows(0)(4), "#NV!")
+            Assert.AreEqual(Double.PositiveInfinity, dt.Rows(0)(5), "#ZAHL!")
+            Assert.AreEqual(Double.NaN, dt.Rows(1)(6), "#DIV/0")
+            Assert.AreEqual("#NAME?", dt.Rows(1)(7), "#NAME?")
+            Assert.AreEqual("#VALUE!", dt.Rows(1)(8), "#WERT")
+            Assert.AreEqual("#REF!", dt.Rows(1)(9), "#BEZUG!")
+            Assert.AreEqual("#N/A", dt.Rows(1)(10), "#NV!")
+            Assert.AreEqual(Double.PositiveInfinity, dt.Rows(1)(11), "#ZAHL!")
+            'All lines and cells with errors
+            Assert.AreEqual(Double.NaN, dt.Rows(0)(12), "#DIV/0")
+            Assert.AreEqual("#NAME?", dt.Rows(0)(13), "#NAME?")
+            Assert.AreEqual("#VALUE!", dt.Rows(0)(14), "#WERT")
+            Assert.AreEqual("#REF!", dt.Rows(0)(15), "#BEZUG!")
+            Assert.AreEqual("#N/A", dt.Rows(0)(16), "#NV!")
+            Assert.AreEqual(Double.PositiveInfinity, dt.Rows(0)(17), "#ZAHL!")
+            Assert.AreEqual(Double.NaN, dt.Rows(1)(12), "#DIV/0")
+            Assert.AreEqual("#NAME?", dt.Rows(1)(13), "#NAME?")
+            Assert.AreEqual("#VALUE!", dt.Rows(1)(14), "#WERT")
+            Assert.AreEqual("#REF!", dt.Rows(1)(15), "#BEZUG!")
+            Assert.AreEqual("#N/A", dt.Rows(1)(16), "#NV!")
+            Assert.AreEqual(Double.PositiveInfinity, dt.Rows(1)(17), "#ZAHL!")
+            'Column with allmost all cells with errors
+            Assert.AreEqual("1", dt.Rows(0)(18), "#DIV/0")
+            Assert.AreEqual("#DIV/0!", dt.Rows(1)(18), "#DIV/0")
+            Assert.AreEqual("#NAME?", dt.Rows(2)(18), "#NAME?")
+            Assert.AreEqual("#VALUE!", dt.Rows(3)(18), "#WERT")
+            Assert.AreEqual("#REF!", dt.Rows(4)(18), "#BEZUG!")
+            Assert.AreEqual("#N/A", dt.Rows(5)(18), "#NV!")
+            Assert.AreEqual("#NUM!", dt.Rows(6)(18), "#ZAHL!")
         End Sub
 
         ''' <summary>
@@ -590,15 +662,16 @@ Namespace CompuMaster.Test.Data
         <Test()> Public Sub ReadTestFileVIProjektDynamicColTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\vi-projekte.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, "Alban", True)
-            Assert.AreEqual(GetType(String), dt.Columns("ADM").DataType)
-            Assert.AreEqual(GetType(Double), dt.Columns("ProdFam").DataType)
+            Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt))
+            Assert.AreEqual(GetType(String), dt.Columns("Info").DataType)
+            Assert.AreEqual(GetType(Double), dt.Columns("KZ").DataType)
             Assert.AreEqual(GetType(Double), dt.Columns("Stück").DataType)
-            Assert.AreEqual(GetType(String), dt.Columns("Kunde").DataType)
+            Assert.AreEqual(GetType(String), dt.Columns("Buchung").DataType)
             Assert.AreEqual(GetType(String), dt.Columns("Modell").DataType)
-            Assert.AreEqual(GetType(Double), dt.Columns("Limitpreis").DataType)
+            Assert.AreEqual(GetType(Double), dt.Columns("Rabatt").DataType)
             Assert.AreEqual(GetType(String), dt.Columns("Planmonat").DataType)
             Assert.AreEqual(GetType(Double), dt.Columns("Chance").DataType)
-            Assert.AreEqual(GetType(Double), dt.Columns("Umsatzgewicht").DataType)
+            Assert.AreEqual(GetType(Double), dt.Columns("Gewicht").DataType)
             Assert.AreEqual(GetType(String), dt.Columns("Lost Order").DataType)
             Assert.AreEqual(GetType(String), dt.Columns("Anmerkungen").DataType)
         End Sub
