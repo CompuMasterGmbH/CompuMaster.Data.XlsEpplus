@@ -11,6 +11,7 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		NAnt|Any CPU = NAnt|Any CPU
 		Release|Any CPU = Release|Any CPU
+		TravisCI|Any CPU = TravisCI|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{14DA1292-0D02-452E-9518-18496AB59231}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -19,21 +20,21 @@ Global
 		{14DA1292-0D02-452E-9518-18496AB59231}.NAnt|Any CPU.Build.0 = NAnt|Any CPU
 		{14DA1292-0D02-452E-9518-18496AB59231}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14DA1292-0D02-452E-9518-18496AB59231}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14DA1292-0D02-452E-9518-18496AB59231}.TravisCI|Any CPU.ActiveCfg = TravisCI|Any CPU
+		{14DA1292-0D02-452E-9518-18496AB59231}.TravisCI|Any CPU.Build.0 = TravisCI|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.NAnt|Any CPU.ActiveCfg = NAnt|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.NAnt|Any CPU.Build.0 = NAnt|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.TravisCI|Any CPU.ActiveCfg = TravisCI|Any CPU
+		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.TravisCI|Any CPU.Build.0 = TravisCI|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9AFB0C99-CF18-4843-B434-9D2E1B93E817}
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal

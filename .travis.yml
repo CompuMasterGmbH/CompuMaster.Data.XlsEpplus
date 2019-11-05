@@ -1,10 +1,27 @@
 language: csharp
 solution: XlsEpplus.sln
+
 mono:
   - latest
+
+addons:
+  apt:
+    packages:
+      - unixodbc
+      - unixodbc-dev
+      - libmyodbc
+      - libmdbodbc1 
+
+dist: trusty
+
+before_install:
+  - nuget install NUnit.Runners -Version 3.4.1 -OutputDirectory testrunner
+
 install:
   - nuget restore XlsEpplus.sln
-  - nuget install NUnit.Runners -Version 3.4.1 -OutputDirectory testrunner
+
 script:
-  - xbuild /p:Configuration=Release XlsEpplus.sln
+  - msbuild /p:Configuration=TravisCI /p:Platform="Any CPU" /p:PostBuildEvent="" XlsEpplus.sln
+
+after_script:
   - mono ./testrunner/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./XlsEpplus.Test/bin/CompuMaster.Test.XlsEpplus.dll
