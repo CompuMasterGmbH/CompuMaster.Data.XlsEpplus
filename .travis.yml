@@ -24,4 +24,4 @@ script:
   - msbuild /p:Configuration=TravisCI /p:Platform="Any CPU" /p:PostBuildEvent="" XlsEpplus.sln
 
 after_script:
-  - mono ./testrunner/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./XlsEpplus.Test/bin/CompuMaster.Test.XlsEpplus.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./XlsEpplus.Test/bin/TravisCI/CompuMaster.Test.XlsEpplus.dll
