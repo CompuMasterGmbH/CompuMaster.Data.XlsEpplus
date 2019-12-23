@@ -696,6 +696,12 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(35, ds.Tables(1).Rows.Count, "Row-Length")
         End Sub
 
+        <Test> Public Sub ReadTestFileDuplicateColumnNames()
+            Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\DuplicateColumnNames.xlsx")
+            Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, 1, True)
+            Assert.AreEqual(1, dt.Rows.Count, "Row-Length")
+            Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt))
+        End Sub
     End Class
 
 End Namespace

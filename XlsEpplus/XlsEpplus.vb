@@ -1193,7 +1193,9 @@ Namespace CompuMaster.Data
                 Dim newCol As DataColumn
                 If firstRowContainsColumnNames Then
                     'hint: also detect e.g. column header with date formats, e.g. "May 2005"
-                    newCol = New DataColumn(CellValueAsString(sheet.Cells(startReadingAtRowIndex + 1, colCounter + 1)), fieldType) 'column gets column name of 1st row
+                    Dim ColName As String = CellValueAsString(sheet.Cells(startReadingAtRowIndex + 1, colCounter + 1))
+                    ColName = Utils.LookupUniqueColumnName(Result, ColName)
+                    newCol = New DataColumn(colName, fieldType) 'column gets column name of 1st row
                 Else
                     newCol = New DataColumn(Nothing, fieldType)
                 End If
