@@ -471,6 +471,12 @@ Namespace CompuMaster.Test.Data
 
         End Sub
 
+        <Test> Public Sub ReadEmptySheetDimensions()
+            Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\emptysheets.xlsx")
+            Dim ds As DataSet = CompuMaster.Data.XlsEpplus.ReadDataSetFromXlsFile(file, False)
+            Assert.Pass()
+        End Sub
+
         <Test()> Public Sub ReadDataTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\datatype-checks.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, True)

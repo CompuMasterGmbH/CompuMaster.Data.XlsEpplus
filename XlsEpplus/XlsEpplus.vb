@@ -877,6 +877,7 @@ Namespace CompuMaster.Data
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function LookupLastContentColumnIndex(ByVal sheet As OfficeOpenXml.ExcelWorksheet) As Integer
+            If sheet.Dimension Is Nothing Then Return 0
             Dim autoSuggestionLastRowIndex As Integer = sheet.Dimension.End.Row - 1
             Dim autoSuggestedResult As Integer = sheet.Dimension.End.Column - 1
             For colCounter As Integer = autoSuggestedResult To 0 Step -1
@@ -896,6 +897,7 @@ Namespace CompuMaster.Data
         ''' <returns></returns>
         ''' <remarks></remarks>
         Private Shared Function LookupLastContentRowIndex(ByVal sheet As OfficeOpenXml.ExcelWorksheet) As Integer
+            If sheet.Dimension Is Nothing Then Return 0
             Dim autoSuggestionLastColumnIndex As Integer = sheet.Dimension.End.Column - 1
             Dim autoSuggestedResult As Integer = sheet.Dimension.End.Row - 1
             For rowCounter As Integer = autoSuggestedResult To 0 Step -1
