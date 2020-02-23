@@ -7,8 +7,8 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("")>
 <Assembly: AssemblyCompany("CompuMaster GmbH")>
 <Assembly: AssemblyProduct("CompuMaster Tools")>
-<Assembly: AssemblyCopyright("2005-2016,2018,2019 CompuMaster GmbH")>
+<Assembly: AssemblyCopyright("2005-2020 CompuMaster GmbH")>
 <Assembly: AssemblyTrademark("camm")>
 <Assembly: CLSCompliant(True)>
 <Assembly: Guid("14D4C425-B7A2-4F73-A91B-7C1EA686B0F6")>
-<Assembly: AssemblyVersion("2019.12.24.*")>
+<Assembly: AssemblyVersion("2020.02.23.*")>

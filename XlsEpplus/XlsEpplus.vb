@@ -369,7 +369,7 @@ Namespace CompuMaster.Data
                             End Try
                         ElseIf value.GetType Is GetType(Decimal) Then
                             Dim decimalValue As Decimal = CType(value, Decimal)
-                            WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Value = CType(value, Double)
+                            WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1).Value = decimalValue
                         ElseIf value.GetType Is GetType(Double) Then
                             Dim doubleValue As Double = CType(value, Double)
                             If doubleValue = Double.PositiveInfinity Then
