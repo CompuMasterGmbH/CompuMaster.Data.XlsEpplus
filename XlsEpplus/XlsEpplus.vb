@@ -19,7 +19,7 @@ Namespace CompuMaster.Data
     ''' 	[adminwezel]	30.05.2005	Created
     ''' </history>
     ''' -----------------------------------------------------------------------------
-    Public Class XlsEpplus
+    Public NotInheritable Class XlsEpplus
 
         Private Shared _ErrorLevel As Byte = 0
         ''' -----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ Namespace CompuMaster.Data
         Public Shared Sub WriteDataSetToXlsFile(ByVal inputPath As String, ByVal outputPath As String, ByVal dataSet As System.Data.DataSet)
             Dim tables As New ArrayList
             Dim tableNames As New ArrayList
-            If Not dataSet Is Nothing AndAlso dataSet.Tables.Count > 0 Then
+            If dataSet IsNot Nothing AndAlso dataSet.Tables.Count > 0 Then
                 For MyCounter As Integer = 0 To dataSet.Tables.Count - 1
                     tables.Add(dataSet.Tables(MyCounter))
                     tableNames.Add(dataSet.Tables(MyCounter).TableName)
@@ -115,7 +115,7 @@ Namespace CompuMaster.Data
         ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFileAndFirstSheet(ByVal outputPath As String, ByVal dataTable As System.Data.DataTable)
             If outputPath = Nothing OrElse (New System.IO.FileInfo(outputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("outputPath", "The output filename is required")
+                Throw New ArgumentNullException(NameOf(outputPath), "The output filename is required")
             End If
 
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
@@ -141,7 +141,7 @@ Namespace CompuMaster.Data
         ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFileAndCurrentSheet(ByVal outputPath As String, ByVal dataTable As System.Data.DataTable)
             If outputPath = Nothing OrElse (New System.IO.FileInfo(outputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("outputPath", "The output filename is required")
+                Throw New ArgumentNullException(NameOf(outputPath), "The output filename is required")
             End If
 
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
@@ -203,7 +203,7 @@ Namespace CompuMaster.Data
         ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFile(ByVal inputPath As String, ByVal outputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String())
             If outputPath = Nothing OrElse (New System.IO.FileInfo(outputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("outputPath", "The output filename is required")
+                Throw New ArgumentNullException(NameOf(outputPath), "The output filename is required")
             End If
 
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
@@ -337,7 +337,7 @@ Namespace CompuMaster.Data
                         ElseIf value.GetType Is GetType(String) Then
                             'Excel requires line-breaks to be an LF character only, not a windows typical CR+LF
                             Dim cell As OfficeOpenXml.ExcelRange = WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1)
-                            If CType(value, String) <> "" Then
+                            If Not String.IsNullOrEmpty(CType(value, String)) Then
                                 value = Replace(CType(value, String), ControlChars.CrLf, ControlChars.Lf) 'Windows line breaks
                                 value = Replace(CType(value, String), ControlChars.Cr, ControlChars.Lf) 'Mac or Linux line break
                             End If
@@ -426,7 +426,7 @@ Namespace CompuMaster.Data
         ''' <param name="dataTables">Some datatables to write into the workbook</param>
         ''' <param name="sheetNames">The name the sheets which shall be updated/added in the order as defined by parameter dataTables</param>
         ''' <remarks></remarks>
-        Public Sub WriteDataTableToXlsStream(ByVal inputPath As String, ByVal outputStream As System.IO.Stream, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal fileFormat As FileFormat)
+        Public Shared Sub WriteDataTableToXlsStream(ByVal inputPath As String, ByVal outputStream As System.IO.Stream, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal fileFormat As FileFormat)
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
             exportWorkbook = OpenAndWriteDataTableToXlsFile(inputPath, dataTables, sheetNames, SpecialSheet.AsDefinedInSheetNamesCollection)
             If exportWorkbook Is Nothing Then
@@ -450,9 +450,9 @@ Namespace CompuMaster.Data
         ''' <param name="sheetNames">The name the sheets which shall be updated/added in the order as defined by parameter dataTables</param>
         ''' <param name="httpContext">The current HTTP context</param>
         ''' <remarks></remarks>
-        Public Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat)
             If dataTables Is Nothing Then
-                Throw New ArgumentNullException("dataTables")
+                Throw New ArgumentNullException(NameOf(dataTables))
             End If
 
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
@@ -504,7 +504,7 @@ Namespace CompuMaster.Data
         Public Shared Function ReadDataSetFromXlsFile(ByVal inputPath As String, ByVal firstRowContainsColumnNames As Boolean) As DataSet
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("inputPath", "The input filename is required")
+                Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
             End If
 
             Dim importWorkbook As OfficeOpenXml.ExcelPackage
@@ -628,7 +628,7 @@ Namespace CompuMaster.Data
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("inputPath", "The input filename is required")
+                Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
             End If
 
             Dim importWorkbook As OfficeOpenXml.ExcelPackage
@@ -731,9 +731,9 @@ Namespace CompuMaster.Data
         ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("inputPath", "The input filename is required")
+                Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
             ElseIf sheetName = Nothing Then
-                Throw New ArgumentNullException("sheetName", "A sheet must be specified")
+                Throw New ArgumentNullException(NameOf(sheetName), "A sheet must be specified")
             End If
 
             Dim importWorkbook As OfficeOpenXml.ExcelPackage
@@ -815,11 +815,11 @@ Namespace CompuMaster.Data
         Public Shared Sub ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean, ByVal data As DataTable)
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("inputPath", "The input filename is required")
+                Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
             ElseIf sheetName = Nothing Then
-                Throw New ArgumentNullException("sheetName", "A sheet must be specified")
+                Throw New ArgumentNullException(NameOf(sheetName), "A sheet must be specified")
             ElseIf data Is Nothing Then
-                Throw New ArgumentNullException("data", "A datatable must be predefined which shall hold all the data")
+                Throw New ArgumentNullException(NameOf(data), "A datatable must be predefined which shall hold all the data")
             End If
 
             Dim importWorkbook As OfficeOpenXml.ExcelPackage
@@ -848,7 +848,7 @@ Namespace CompuMaster.Data
         Public Shared Function ReadSheetNamesFromXlsFile(ByVal inputPath As String) As String()
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
-                Throw New ArgumentNullException("inputPath", "The input filename is required")
+                Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
             End If
 
             Dim importWorkbook As OfficeOpenXml.ExcelPackage
@@ -1005,7 +1005,7 @@ Namespace CompuMaster.Data
                         Case VariantType.String
                             Dim cellValue As String
                             cellValue = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, String)
-                            If cellValue <> "" AndAlso System.Environment.NewLine <> ControlChars.Lf Then
+                            If Not String.IsNullOrEmpty(cellValue) AndAlso System.Environment.NewLine <> ControlChars.Lf Then
                                 cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine, , , CompareMethod.Binary)
                             End If
                             value = cellValue
@@ -1043,7 +1043,7 @@ Namespace CompuMaster.Data
                                 value = DBNull.Value
                             End If
                     End Select
-                    If value.GetType Is GetType(String) AndAlso CType(value, String) = "" AndAlso Not data.Columns(colCounter).DataType Is GetType(String) Then
+                    If value.GetType Is GetType(String) AndAlso String.IsNullOrEmpty(CType(value, String)) AndAlso data.Columns(colCounter).DataType IsNot GetType(String) Then
                         'Handle situation that a cell might contain a "" instead of a blank value because of some user-defined Excel formulas which shall return "blank" cell content by using "" - irrespective to the regular column data type
                         'e.g. following formula: =IF($F6=I$1;1;"")
                         value = DBNull.Value
@@ -1090,7 +1090,7 @@ Namespace CompuMaster.Data
         ''' <param name="cellFormat"></param>
         ''' <returns></returns>
         Private Shared Function IsDateTimeFormat(cellFormat As String) As Boolean
-            If cellFormat = "" Then
+            If String.IsNullOrEmpty(cellFormat) Then
                 Return False
             ElseIf cellFormat.StartsWith("yyyy-MM-dd") OrElse cellFormat.StartsWith("HH:mm:ss") Then
                 Return True
@@ -1166,7 +1166,7 @@ Namespace CompuMaster.Data
                                 Exit For
                             End If
                         Case VariantType.String
-                            If sheet.Cells(RowCounter + 1, colCounter + 1).Value.ToString = "" Then
+                            If String.IsNullOrEmpty(sheet.Cells(RowCounter + 1, colCounter + 1).Value.ToString) Then
                                 'keep it
                             ElseIf fieldType Is Nothing Then
                                 fieldType = GetType(String)
@@ -1217,8 +1217,10 @@ Namespace CompuMaster.Data
         Private Shared Function CellValueAsString(ByVal cell As OfficeOpenXml.ExcelRange) As String
             Try
                 Return cell.Text
+#Disable Warning CA1031 ' Do not catch general exception types
             Catch ex As Exception
                 Return "#ERROR: " & ex.Message
+#Enable Warning CA1031 ' Do not catch general exception types
             End Try
         End Function
         ''' -----------------------------------------------------------------------------
@@ -1280,8 +1282,10 @@ Namespace CompuMaster.Data
                 Try
                     DateTime.FromOADate(CType(cell.Value, Double))
                     Return True
+#Disable Warning CA1031 ' Do not catch general exception types
                 Catch
                     Return False
+#Enable Warning CA1031 ' Do not catch general exception types
                 End Try
             Else
                 Return False
