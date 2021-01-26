@@ -964,9 +964,11 @@ Namespace CompuMaster.Data
             End If
             firstRowIndexWithContent += startReadingAtRowIndex
             'sheet.CalcDimensions() 'Calculate the sheet end positions (to prevent bug that this information is 0, e. g. after saving and reloading with this component)
-            For rowCounter As Integer = firstRowIndexWithContent To LookupLastContentRowIndex(sheet)
+            Dim LastSheetContentRowIndex As Integer = LookupLastContentRowIndex(sheet)
+            Dim LastSheetContentColumnIndex As Integer = LookupLastContentColumnIndex(sheet)
+            For rowCounter As Integer = firstRowIndexWithContent To LastSheetContentRowIndex
                 Dim row As DataRow = data.NewRow
-                For colCounter As Integer = 0 To LookupLastContentColumnIndex(sheet)
+                For colCounter As Integer = 0 To LastSheetContentColumnIndex
                     Dim value As Object
                     Select Case LookupDotNetType(sheet.Cells(rowCounter + 1, colCounter + 1))
                         Case VariantType.Empty
@@ -1118,18 +1120,19 @@ Namespace CompuMaster.Data
 
             'Add required amount of columns
             'sheet.CalcDimensions() 'Calculate the sheet end positions (to prevent bug that this information is 0, e. g. after saving and reloading with this component)
-            For colCounter As Integer = 0 To LookupLastContentColumnIndex(sheet)
+            Dim LastSheetContentRowIndex As Integer = LookupLastContentRowIndex(sheet)
+            Dim LastSheetContentColumnIndex As Integer = LookupLastContentColumnIndex(sheet)
+            For colCounter As Integer = 0 To LastSheetContentColumnIndex
                 'step through all rows and determine if there is a common data type, e. g. Date, String, Double
                 Dim fieldType As System.Type = Nothing
-                Dim firstContentRowIndex As Integer, lastContentRowIndex As Integer
+                Dim firstContentRowIndex As Integer
                 If firstRowContainsColumnNames Then
                     firstContentRowIndex = 1
                 Else
                     firstContentRowIndex = 0
                 End If
                 firstContentRowIndex += startReadingAtRowIndex
-                lastContentRowIndex = LookupLastContentRowIndex(sheet)
-                For RowCounter As Integer = firstContentRowIndex To lastContentRowIndex
+                For RowCounter As Integer = firstContentRowIndex To LastSheetContentRowIndex
                     Select Case LookupDotNetType(sheet.Cells(RowCounter + 1, colCounter + 1))
                         Case VariantType.Empty
                             'no decision here
@@ -1195,7 +1198,7 @@ Namespace CompuMaster.Data
                     'hint: also detect e.g. column header with date formats, e.g. "May 2005"
                     Dim ColName As String = CellValueAsString(sheet.Cells(startReadingAtRowIndex + 1, colCounter + 1))
                     ColName = Utils.LookupUniqueColumnName(Result, ColName)
-                    newCol = New DataColumn(colName, fieldType) 'column gets column name of 1st row
+                    newCol = New DataColumn(ColName, fieldType) 'column gets column name of 1st row
                 Else
                     newCol = New DataColumn(Nothing, fieldType)
                 End If
