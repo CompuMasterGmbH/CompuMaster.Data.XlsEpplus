@@ -445,12 +445,40 @@ Namespace CompuMaster.Data
         ''' <summary>
         ''' Directly send the new workbook file to the browser
         ''' </summary>
+        ''' <param name="dataTable">A datatable to write into the workbook</param>
+        ''' <param name="sheetName">The name the sheet</param>
+        ''' <param name="httpContext">The current HTTP context</param>
+        ''' <param name="fileFormat">The desired file format</param>
+        ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
+        ''' <remarks></remarks>
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+            WriteDataTableToXlsHttpResponse(String.Empty, New DataTable() {dataTable}, New String() {sheetName}, httpContext, fileFormat, suggestedFileNameToBrowser)
+        End Sub
+
+        ''' <summary>
+        ''' Directly send the new workbook file to the browser
+        ''' </summary>
         ''' <param name="inputPath">An optional path to a template</param>
         ''' <param name="dataTables">Some datatables to write into the workbook</param>
         ''' <param name="sheetNames">The name the sheets which shall be updated/added in the order as defined by parameter dataTables</param>
         ''' <param name="httpContext">The current HTTP context</param>
+        ''' <param name="fileFormat">The desired file format</param>
         ''' <remarks></remarks>
         Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat)
+            WriteDataTableToXlsHttpResponse(inputPath, dataTables, sheetNames, httpContext, fileFormat, String.Empty)
+        End Sub
+
+        ''' <summary>
+        ''' Directly send the new workbook file to the browser
+        ''' </summary>
+        ''' <param name="inputPath">An optional path to a template</param>
+        ''' <param name="dataTables">Some datatables to write into the workbook</param>
+        ''' <param name="sheetNames">The name the sheets which shall be updated/added in the order as defined by parameter dataTables</param>
+        ''' <param name="httpContext">The current HTTP context</param>
+        ''' <param name="fileFormat">The desired file format</param>
+        ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
+        ''' <remarks></remarks>
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             If dataTables Is Nothing Then
                 Throw New ArgumentNullException(NameOf(dataTables))
             End If
@@ -464,7 +492,15 @@ Namespace CompuMaster.Data
             ' compatible with Excel 97/2000/XP/2003/2007.
             httpContext.Response.Clear()
             httpContext.Response.ContentType = "application/vnd.ms-excel"
-            httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=report.xls")
+            If suggestedFileNameToBrowser = Nothing Then
+                Select Case fileFormat
+                    Case FileFormat.Excel2007Macro
+                        suggestedFileNameToBrowser = "report.xlsm"
+                    Case Else
+                        suggestedFileNameToBrowser = "report.xlsx"
+                End Select
+            End If
+            httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" & System.Web.HttpUtility.UrlEncode(suggestedFileNameToBrowser))
             If fileFormat = FileFormat.Excel2007 Then
                 'Excel 2007 format
                 exportWorkbook.SaveAs(httpContext.Response.OutputStream)
