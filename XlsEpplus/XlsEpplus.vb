@@ -491,7 +491,7 @@ Namespace CompuMaster.Data
 
             ' compatible with Excel 97/2000/XP/2003/2007.
             httpContext.Response.Clear()
-            httpContext.Response.ContentType = "application/vnd.ms-excel"
+            httpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             If suggestedFileNameToBrowser = Nothing Then
                 Select Case fileFormat
                     Case FileFormat.Excel2007Macro
