@@ -1,9 +1,13 @@
-Option Explicit On 
+Option Explicit On
 Option Strict On
+
+Imports System.Data
+Imports CompuMaster.Data.Epplus
+Imports CompuMaster.Data.Epplus.Strings
+Imports CompuMaster.Data.Epplus.Information
 
 Namespace CompuMaster.Data
 
-    ''' -----------------------------------------------------------------------------
     ''' <summary>
     '''     Provides simplified write access to XLS files
     ''' </summary>
@@ -15,24 +19,16 @@ Namespace CompuMaster.Data
     '''     - Excel DateTime values are limited to year, month, day, hour, minute, second. Milliseconds and ticks will be dropped.
     '''     - Lines with only DBNull.Value or null (Nothing in VisualBasic) will be considered as not-existing if they are the last lines
     ''' </remarks>
-    ''' <history>
-    ''' 	[adminwezel]	30.05.2005	Created
-    ''' </history>
-    ''' -----------------------------------------------------------------------------
     Public NotInheritable Class XlsEpplus
 
         Private Shared _ErrorLevel As Byte = 0
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         ''' Error level 0 doesn't throw exception when writing e.g. invalid date/time values (invalid for excel); Error level 1 throws them
         ''' </summary>
         ''' <value></value>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	31.05.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Property ErrorLevel() As Byte
             Get
                 Return _ErrorLevel
@@ -42,7 +38,7 @@ Namespace CompuMaster.Data
             End Set
         End Property
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Create an new excel file with some data
         ''' </summary>
@@ -50,15 +46,11 @@ Namespace CompuMaster.Data
         ''' <param name="dataSet">A dataset to write into the workbook</param>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataSetToXlsFile(ByVal outputPath As String, ByVal dataSet As System.Data.DataSet)
             WriteDataSetToXlsFile(Nothing, outputPath, dataSet)
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Load an excel file, put some data into it and save the file again
         ''' </summary>
@@ -67,10 +59,6 @@ Namespace CompuMaster.Data
         ''' <param name="dataSet">A dataset to write into the workbook</param>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataSetToXlsFile(ByVal inputPath As String, ByVal outputPath As String, ByVal dataSet As System.Data.DataSet)
             Dim tables As New ArrayList
             Dim tableNames As New ArrayList
@@ -83,7 +71,7 @@ Namespace CompuMaster.Data
             WriteDataTableToXlsFile(inputPath, outputPath, CType(tables.ToArray(GetType(DataTable)), DataTable()), CType(tableNames.ToArray(GetType(String)), String()))
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Create an new excel file with some data
         ''' </summary>
@@ -92,15 +80,12 @@ Namespace CompuMaster.Data
         ''' <remarks>
         ''' The data will be written to the sheet with the name as the datatable's name
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFile(ByVal outputPath As String, ByVal dataTable As System.Data.DataTable)
             WriteDataTableToXlsFile(Nothing, outputPath, dataTable, CType(Nothing, String))
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
+#Disable Warning IDE0079 ' Unnötige Unterdrückung entfernen
         ''' <summary>
         '''     Create an new excel file with some data
         ''' </summary>
@@ -109,10 +94,7 @@ Namespace CompuMaster.Data
         ''' <remarks>
         ''' The data will be written to the sheet with the name as the datatable's name
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        <CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.")>
         Public Shared Sub WriteDataTableToXlsFileAndFirstSheet(ByVal outputPath As String, ByVal dataTable As System.Data.DataTable)
             If outputPath = Nothing OrElse (New System.IO.FileInfo(outputPath)).FullName = Nothing Then
                 Throw New ArgumentNullException(NameOf(outputPath), "The output filename is required")
@@ -126,7 +108,7 @@ Namespace CompuMaster.Data
             SaveWorkbook(exportWorkbook, outputPath)
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Create an new excel file with some data
         ''' </summary>
@@ -135,10 +117,7 @@ Namespace CompuMaster.Data
         ''' <remarks>
         ''' The data will be written to the sheet with the name as the datatable's name
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
+        <CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.")>
         Public Shared Sub WriteDataTableToXlsFileAndCurrentSheet(ByVal outputPath As String, ByVal dataTable As System.Data.DataTable)
             If outputPath = Nothing OrElse (New System.IO.FileInfo(outputPath)).FullName = Nothing Then
                 Throw New ArgumentNullException(NameOf(outputPath), "The output filename is required")
@@ -151,8 +130,8 @@ Namespace CompuMaster.Data
             End If
             SaveWorkbook(exportWorkbook, outputPath)
         End Sub
+#Enable Warning IDE0079 ' Unnötige Unterdrückung entfernen
 
-        ''' -----------------------------------------------------------------------------
         ''' <summary>
         '''     Create an new excel file with some data
         ''' </summary>
@@ -161,15 +140,11 @@ Namespace CompuMaster.Data
         ''' <param name="sheetName">The name the sheet which shall be updated/added</param>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFile(ByVal outputPath As String, ByVal dataTable As System.Data.DataTable, ByVal sheetName As String)
             WriteDataTableToXlsFile(Nothing, outputPath, dataTable, sheetName)
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Load an excel file, put some data into it and save the file again
         ''' </summary>
@@ -179,15 +154,11 @@ Namespace CompuMaster.Data
         ''' <param name="sheetName">The name the sheet which shall be updated/added</param>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFile(ByVal inputPath As String, ByVal outputPath As String, ByVal dataTable As System.Data.DataTable, ByVal sheetName As String)
             WriteDataTableToXlsFile(inputPath, outputPath, New DataTable() {dataTable}, New String() {sheetName})
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         ''' Update/create an excel file, put some data into it and save the file again
         ''' </summary>
@@ -197,10 +168,6 @@ Namespace CompuMaster.Data
         ''' <param name="sheetNames">The name the sheets which shall be updated/added in the order as defined by parameter dataTables</param>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminsupport]	05.07.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub WriteDataTableToXlsFile(ByVal inputPath As String, ByVal outputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String())
             If outputPath = Nothing OrElse (New System.IO.FileInfo(outputPath)).FullName = Nothing Then
                 Throw New ArgumentNullException(NameOf(outputPath), "The output filename is required")
@@ -258,7 +225,7 @@ Namespace CompuMaster.Data
             If dataTables Is Nothing Then
                 Return Nothing
             ElseIf specialSheet = XlsEpplus.SpecialSheet.AsDefinedInSheetNamesCollection AndAlso (sheetnames Is Nothing OrElse dataTables.Length <> sheetnames.Length) Then
-                Throw New ArgumentException("Arrays must have the same length", "sheetNames")
+                Throw New ArgumentException("Arrays must have the same length", NameOf(sheetnames))
             End If
 
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
@@ -451,7 +418,7 @@ Namespace CompuMaster.Data
         ''' <param name="fileFormat">The desired file format</param>
         ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             WriteDataTableToXlsHttpResponse(String.Empty, New DataTable() {dataTable}, New String() {sheetName}, httpContext, fileFormat, suggestedFileNameToBrowser)
         End Sub
 
@@ -464,7 +431,7 @@ Namespace CompuMaster.Data
         ''' <param name="httpContext">The current HTTP context</param>
         ''' <param name="fileFormat">The desired file format</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat)
             WriteDataTableToXlsHttpResponse(inputPath, dataTables, sheetNames, httpContext, fileFormat, String.Empty)
         End Sub
 
@@ -478,7 +445,7 @@ Namespace CompuMaster.Data
         ''' <param name="fileFormat">The desired file format</param>
         ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             If dataTables Is Nothing Then
                 Throw New ArgumentNullException(NameOf(dataTables))
             End If
@@ -490,7 +457,7 @@ Namespace CompuMaster.Data
             End If
 
             ' compatible with Excel 97/2000/XP/2003/2007.
-            httpContext.Response.Clear()
+            'httpContext.Response.Clear()
             httpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             If suggestedFileNameToBrowser = Nothing Then
                 Select Case fileFormat
@@ -500,7 +467,7 @@ Namespace CompuMaster.Data
                         suggestedFileNameToBrowser = "report.xlsx"
                 End Select
             End If
-            httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" & System.Web.HttpUtility.UrlEncode(suggestedFileNameToBrowser))
+            httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" & System.Net.WebUtility.UrlEncode(suggestedFileNameToBrowser))
             If fileFormat = FileFormat.Excel2007 Then
                 'Excel 2007 format
                 exportWorkbook.SaveAs(httpContext.Response.OutputStream)
@@ -512,7 +479,7 @@ Namespace CompuMaster.Data
             End If
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read all sheets from an excel sheet into a dataset
         ''' </summary>
@@ -533,10 +500,6 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataSetFromXlsFile(ByVal inputPath As String, ByVal firstRowContainsColumnNames As Boolean) As DataSet
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
@@ -577,7 +540,7 @@ Namespace CompuMaster.Data
             Return importWorkbook
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -598,15 +561,11 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String) As DataTable
             Return ReadDataTableFromXlsFile(inputPath, True)
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -627,15 +586,11 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             Return ReadDataTableFromXlsFile(inputPath, 0, firstRowContainsColumnNames)
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -657,10 +612,6 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
@@ -684,7 +635,7 @@ Namespace CompuMaster.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -704,15 +655,11 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String) As DataTable
             Return ReadDataTableFromXlsFile(inputPath, sheetName, True)
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -732,15 +679,11 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             Return ReadDataTableFromXlsFile(inputPath, sheetName, 0, firstRowContainsColumnNames)
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -761,10 +704,6 @@ Namespace CompuMaster.Data
         '''     #NA 7      --> Cell value of type System.Exception with error details
         '''     {blank}    --> DBNull
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
                 Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
@@ -789,7 +728,7 @@ Namespace CompuMaster.Data
 
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -812,15 +751,11 @@ Namespace CompuMaster.Data
         ''' 
         '''     Dependent on the firstRowContainsColumnNames parameter, the datatable parameter must contain a table with column names as they're defined in the first row of the excel sheet or the table's columnn must have the name of the column index in excel ("1", "2", "3", ...)
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal firstRowContainsColumnNames As Boolean, ByVal data As DataTable)
             ReadDataTableFromXlsFile(inputPath, sheetName, 0, firstRowContainsColumnNames, data)
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -844,10 +779,6 @@ Namespace CompuMaster.Data
         ''' 
         '''     Dependent on the firstRowContainsColumnNames parameter, the datatable parameter must contain a table with column names as they're defined in the first row of the excel sheet or the table's columnn must have the name of the column index in excel ("1", "2", "3", ...)
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Sub ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean, ByVal data As DataTable)
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
@@ -869,7 +800,7 @@ Namespace CompuMaster.Data
 
         End Sub
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         ''' Read the available sheet names from an XLS file
         ''' </summary>
@@ -877,10 +808,6 @@ Namespace CompuMaster.Data
         ''' <returns></returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[wezel]	21.04.2010	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Public Shared Function ReadSheetNamesFromXlsFile(ByVal inputPath As String) As String()
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
@@ -965,7 +892,7 @@ Namespace CompuMaster.Data
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
         ''' </summary>
@@ -986,10 +913,6 @@ Namespace CompuMaster.Data
         ''' 
         '''     Dependent on the firstRowContainsColumnNames parameter, the datatable parameter must contain a table with column names as they're defined in the first row of the excel sheet or the table's columnn must have the name of the column index in excel ("1", "2", "3", ...)
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Sub ReadDataTableFromXlsFile(ByVal sheet As OfficeOpenXml.ExcelWorksheet, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean, ByVal data As DataTable)
             'Read all data and put it into the datatable (pay attention to field with blank content, #DIV/0 and all the other error types
             Dim firstRowIndexWithContent As Integer
@@ -1042,7 +965,7 @@ Namespace CompuMaster.Data
                             Dim cellValue As String
                             cellValue = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, String)
                             If Not String.IsNullOrEmpty(cellValue) AndAlso System.Environment.NewLine <> ControlChars.Lf Then
-                                cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine, , , CompareMethod.Binary)
+                                cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine)
                             End If
                             value = cellValue
                         Case VariantType.Date
@@ -1120,6 +1043,29 @@ Namespace CompuMaster.Data
             End If
         End Function
 
+        Private Enum VariantType As Integer
+            Array = 8192
+            [Boolean] = 11
+            [Byte] = 17
+            [Char] = 18
+            Currency = 6
+            DataObject = 13
+            [Date] = 7
+            [Decimal] = 14
+            [Double] = 5
+            Empty = 0
+            [Error] = 10
+            [Integer] = 3
+            [Long] = 20
+            Null = 1
+            [Object] = 9
+            [Short] = 2
+            [Single] = 4
+            [String] = 8
+            UserDefinedType = 36
+            [Variant] = 12
+        End Enum
+
         ''' <summary>
         ''' Detect custom date/time format strings which haven't been detected by Epplus
         ''' </summary>
@@ -1135,7 +1081,7 @@ Namespace CompuMaster.Data
             End If
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Analyze the values in the complete sheet for their data type and create a data table with those corresponding column data types to hold all the data of the sheet
         ''' </summary>
@@ -1146,10 +1092,6 @@ Namespace CompuMaster.Data
         ''' <returns>A data table with the suggested structure to be able to hold all the data of the sheet</returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ReadDataTableFromXlsFileCreateDataTableSuggestion(ByVal sheet As OfficeOpenXml.ExcelWorksheet, ByVal tableName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             'Create a datatable which can hold all the data available in that sheet (pay attention to the automatic column type detection)
             Dim Result As New DataTable(tableName)
@@ -1259,7 +1201,7 @@ Namespace CompuMaster.Data
 #Enable Warning CA1031 ' Do not catch general exception types
             End Try
         End Function
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Lookup the (zero-based) index number of a work sheet
         ''' </summary>
@@ -1268,10 +1210,6 @@ Namespace CompuMaster.Data
         ''' <returns>-1 if the sheet name doesn't exist, otherwise its index value</returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[AdminSupport]	29.09.2005	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function ResolveWorksheetIndex(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal worksheetName As String) As Integer
             Dim sheetIndex As Integer = -1
             For MyCounter As Integer = 0 To workbook.Workbook.Worksheets.Count - 1
@@ -1283,7 +1221,7 @@ Namespace CompuMaster.Data
             Return sheetIndex
         End Function
 
-        ''' -----------------------------------------------------------------------------
+
         ''' <summary>
         '''     Lookup for a sheet with the specified name
         ''' </summary>
@@ -1292,10 +1230,6 @@ Namespace CompuMaster.Data
         ''' <returns>An excel sheet</returns>
         ''' <remarks>
         ''' </remarks>
-        ''' <history>
-        ''' 	[adminwezel]	02.02.2007	Created
-        ''' </history>
-        ''' -----------------------------------------------------------------------------
         Private Shared Function LookupWorksheet(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal sheetName As String) As OfficeOpenXml.ExcelWorksheet
             Dim resolvedIndex As Integer = ResolveWorksheetIndex(workbook, sheetName)
             If resolvedIndex = -1 Then
