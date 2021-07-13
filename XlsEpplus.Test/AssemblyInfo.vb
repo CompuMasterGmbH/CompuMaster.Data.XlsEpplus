@@ -11,4 +11,4 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTrademark("camm")>
 <Assembly: CLSCompliant(True)>
 <Assembly: Guid("14D4C425-B7A2-4F73-A91B-7C1EA686B0F6")>
-<Assembly: AssemblyVersion("2020.02.23.*")>
+<Assembly: AssemblyVersion("2020.07.13.*")>
