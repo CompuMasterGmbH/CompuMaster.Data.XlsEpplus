@@ -83,14 +83,6 @@
 		<AssemblyName>CompuMaster.Data.XlsEpplus</AssemblyName>
 	</PropertyGroup>
 	<ItemGroup>
-	  <None Remove="logo_64x64.png" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="logo_64x64.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-	<ItemGroup>
 	  <PackageReference Include="EPPlus" Version="4.5.3.2" />
 	</ItemGroup>
 	<ItemGroup>
