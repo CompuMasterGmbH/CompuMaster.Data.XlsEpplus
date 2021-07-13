@@ -81,6 +81,7 @@
 	<PropertyGroup>
 		<OptionStrict>Off</OptionStrict>
 		<AssemblyName>CompuMaster.Data.XlsEpplus</AssemblyName>
+		<PackageIconUrl />
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="EPPlus" Version="4.5.3.2" />
@@ -89,5 +90,11 @@
 	  <Compile Update="XlsEpplus.vb">
 	    <SubType>Code</SubType>
 	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="..\logo_64x64.png">
+	    <Pack>True</Pack>
+	    <PackagePath></PackagePath>
+	  </None>
 	</ItemGroup>
 </Project>
