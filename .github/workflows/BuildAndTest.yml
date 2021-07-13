@@ -26,8 +26,8 @@ env:
   # Configuration type to build
   BUILD_CONFIGURATION: CI_CD
 
-  BUILD_OUTPUT: Console/bin/Debug
-  BUILD_OUTPUT_TEST: ConsoleTest/bin/Debug
+  BUILD_OUTPUT: XlsEpplus/bin/Debug
+  BUILD_OUTPUT_TEST: XlsEpplus.Test/bin/Debug
 
 jobs:
 
