@@ -229,7 +229,9 @@ Namespace CompuMaster.Test.Data
                 If System.IO.File.Exists(Me.TempFile) Then
                     Try
                         System.IO.File.Delete(Me.TempFile)
+#Disable Warning CA1031 ' Do not catch general exception types
                     Catch
+#Enable Warning CA1031 ' Do not catch general exception types
                     End Try
                 End If
             End If
