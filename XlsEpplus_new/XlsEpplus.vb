@@ -2,8 +2,9 @@ Option Explicit On
 Option Strict On
 
 Imports System.Data
-Imports CompuMaster.VisualBasicCompatibility
-
+Imports CompuMaster.Data.Epplus
+Imports CompuMaster.Data.Epplus.Strings
+Imports CompuMaster.Data.Epplus.Information
 
 Namespace CompuMaster.Data
 
@@ -23,6 +24,7 @@ Namespace CompuMaster.Data
     ''' 	[adminwezel]	30.05.2005	Created
     ''' </history>
     ''' -----------------------------------------------------------------------------
+    <CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.")>
     Public NotInheritable Class XlsEpplus
 
         Private Shared _ErrorLevel As Byte = 0
@@ -262,7 +264,7 @@ Namespace CompuMaster.Data
             If dataTables Is Nothing Then
                 Return Nothing
             ElseIf specialSheet = XlsEpplus.SpecialSheet.AsDefinedInSheetNamesCollection AndAlso (sheetnames Is Nothing OrElse dataTables.Length <> sheetnames.Length) Then
-                Throw New ArgumentException("Arrays must have the same length", "sheetNames")
+                Throw New ArgumentException("Arrays must have the same length", NameOf(sheetnames))
             End If
 
             Dim exportWorkbook As OfficeOpenXml.ExcelPackage
@@ -455,7 +457,7 @@ Namespace CompuMaster.Data
         ''' <param name="fileFormat">The desired file format</param>
         ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             WriteDataTableToXlsHttpResponse(String.Empty, New DataTable() {dataTable}, New String() {sheetName}, httpContext, fileFormat, suggestedFileNameToBrowser)
         End Sub
 
@@ -468,7 +470,7 @@ Namespace CompuMaster.Data
         ''' <param name="httpContext">The current HTTP context</param>
         ''' <param name="fileFormat">The desired file format</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat)
             WriteDataTableToXlsHttpResponse(inputPath, dataTables, sheetNames, httpContext, fileFormat, String.Empty)
         End Sub
 
@@ -482,7 +484,7 @@ Namespace CompuMaster.Data
         ''' <param name="fileFormat">The desired file format</param>
         ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             If dataTables Is Nothing Then
                 Throw New ArgumentNullException(NameOf(dataTables))
             End If
@@ -494,7 +496,7 @@ Namespace CompuMaster.Data
             End If
 
             ' compatible with Excel 97/2000/XP/2003/2007.
-            httpContext.Response.Clear()
+            'httpContext.Response.Clear()
             httpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             If suggestedFileNameToBrowser = Nothing Then
                 Select Case fileFormat
@@ -504,7 +506,7 @@ Namespace CompuMaster.Data
                         suggestedFileNameToBrowser = "report.xlsx"
                 End Select
             End If
-            httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" & System.Web.HttpUtility.UrlEncode(suggestedFileNameToBrowser))
+            httpContext.Response.AddHeader("Content-Disposition", "attachment; filename=" & System.Net.WebUtility.UrlEncode(suggestedFileNameToBrowser))
             If fileFormat = FileFormat.Excel2007 Then
                 'Excel 2007 format
                 exportWorkbook.SaveAs(httpContext.Response.OutputStream)
@@ -1046,7 +1048,7 @@ Namespace CompuMaster.Data
                             Dim cellValue As String
                             cellValue = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, String)
                             If Not String.IsNullOrEmpty(cellValue) AndAlso System.Environment.NewLine <> ControlChars.Lf Then
-                                cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine, , , CompareMethod.Binary)
+                                cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine)
                             End If
                             value = cellValue
                         Case VariantType.Date
@@ -1123,6 +1125,29 @@ Namespace CompuMaster.Data
                 End Select
             End If
         End Function
+
+        Private Enum VariantType As Integer
+            Array = 8192
+            [Boolean] = 11
+            [Byte] = 17
+            [Char] = 18
+            Currency = 6
+            DataObject = 13
+            [Date] = 7
+            [Decimal] = 14
+            [Double] = 5
+            Empty = 0
+            [Error] = 10
+            [Integer] = 3
+            [Long] = 20
+            Null = 1
+            [Object] = 9
+            [Short] = 2
+            [Single] = 4
+            [String] = 8
+            UserDefinedType = 36
+            [Variant] = 12
+        End Enum
 
         ''' <summary>
         ''' Detect custom date/time format strings which haven't been detected by Epplus

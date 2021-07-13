@@ -97,7 +97,7 @@
     <DebugType>none</DebugType>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'TravisCI|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'CI_CD|AnyCPU' ">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\TravisCI\</OutputPath>
     <BaseAddress>285212672</BaseAddress>

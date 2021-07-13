@@ -28,11 +28,11 @@
                 End If
             Next
             'Read out the value of the counter
-            Dim NumberCounterValue As Integer = 0
+            Dim NumberCounterValue As Integer
             If NumberPositionIndex = -1 OrElse NumberPositionIndex + 1 > suggestedColumnName.Length Then
                 'Attach a new counter value
                 NumberCounterValue = 1
-                suggestedColumnName = suggestedColumnName & NumberCounterValue.ToString
+                suggestedColumnName &= NumberCounterValue.ToString
             Else
                 'Update the counter value
                 NumberCounterValue = CType(suggestedColumnName.Substring(NumberPositionIndex), Integer) + 1
