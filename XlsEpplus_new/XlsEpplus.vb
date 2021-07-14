@@ -342,8 +342,8 @@ Namespace CompuMaster.Data
                             'Excel requires line-breaks to be an LF character only, not a windows typical CR+LF
                             Dim cell As OfficeOpenXml.ExcelRange = WorkSheet.Cells(RowCounter + 1 + 1, ColCounter + 1)
                             If Not String.IsNullOrEmpty(CType(value, String)) Then
-                                value = Replace(CType(value, String), ControlChars.CrLf, ControlChars.Lf) 'Windows line breaks
-                                value = Replace(CType(value, String), ControlChars.Cr, ControlChars.Lf) 'Mac or Linux line break
+                                value = Strings.Replace(CType(value, String), ControlChars.CrLf, ControlChars.Lf) 'Windows line breaks
+                                value = Strings.Replace(CType(value, String), ControlChars.Cr, ControlChars.Lf) 'Mac or Linux line break
                             End If
                             cell.Formula = ""
                             cell.Value = value
@@ -455,7 +455,7 @@ Namespace CompuMaster.Data
         ''' <param name="fileFormat">The desired file format</param>
         ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal dataTable As System.Data.DataTable, ByVal sheetName As String, ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             WriteDataTableToXlsHttpResponse(String.Empty, New DataTable() {dataTable}, New String() {sheetName}, httpContext, fileFormat, suggestedFileNameToBrowser)
         End Sub
 
@@ -468,7 +468,7 @@ Namespace CompuMaster.Data
         ''' <param name="httpContext">The current HTTP context</param>
         ''' <param name="fileFormat">The desired file format</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat)
             WriteDataTableToXlsHttpResponse(inputPath, dataTables, sheetNames, httpContext, fileFormat, String.Empty)
         End Sub
 
@@ -482,7 +482,7 @@ Namespace CompuMaster.Data
         ''' <param name="fileFormat">The desired file format</param>
         ''' <param name="suggestedFileNameToBrowser">The suggested file name</param>
         ''' <remarks></remarks>
-        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Web.HttpContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
+        Public Shared Sub WriteDataTableToXlsHttpResponse(ByVal inputPath As String, ByVal dataTables As System.Data.DataTable(), ByVal sheetNames As String(), ByVal httpContext As System.Net.HttpListenerContext, ByVal fileFormat As FileFormat, suggestedFileNameToBrowser As String)
             If dataTables Is Nothing Then
                 Throw New ArgumentNullException(NameOf(dataTables))
             End If
@@ -494,7 +494,7 @@ Namespace CompuMaster.Data
             End If
 
             ' compatible with Excel 97/2000/XP/2003/2007.
-            httpContext.Response.Clear()
+            httpContext.Response.OutputStream.Flush()
             httpContext.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             If suggestedFileNameToBrowser = Nothing Then
                 Select Case fileFormat
@@ -1046,7 +1046,7 @@ Namespace CompuMaster.Data
                             Dim cellValue As String
                             cellValue = CType(sheet.Cells(rowCounter + 1, colCounter + 1).Value, String)
                             If Not String.IsNullOrEmpty(cellValue) AndAlso System.Environment.NewLine <> ControlChars.Lf Then
-                                cellValue = Replace(cellValue, ControlChars.Lf, System.Environment.NewLine, , , CompareMethod.Binary)
+                                cellValue = Strings.Replace(cellValue, ControlChars.Lf, System.Environment.NewLine, , , CompareMethod.Binary)
                             End If
                             value = cellValue
                         Case VariantType.Date

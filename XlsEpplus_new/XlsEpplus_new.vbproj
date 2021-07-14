@@ -74,6 +74,12 @@
 		<OptionStrict>Off</OptionStrict>
 		<AssemblyName>CompuMaster.Data.XlsEpplus</AssemblyName>
 	</PropertyGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net48' Or '$(TargetFramework)' == 'net45'">
+		<Reference Include="System.Web" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="CompuMaster.VisualBasicCompatibility" Version="1.0.3" />
+	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="XlsEpplus.vb">
 	    <SubType>Code</SubType>
