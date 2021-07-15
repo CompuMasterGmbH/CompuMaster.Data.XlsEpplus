@@ -49,8 +49,12 @@ Namespace CompuMaster.Test.Data
 
             'read the existing file, auto-detect column-types, take datatable and compare it with the written data: it should be always the same (or must be argumented and discussed with Jochen why it isn't)
             'the number of columns and rows should be always 2
-            Dim ReReadData As DataTable
-            ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Dim ReReadData As DataTable = Nothing
+            Try
+                ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Catch ex As Exception
+                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+            End Try
             Assert.AreEqual("test", ReReadData.TableName, "SaveAndReadUnicode #05")
             Assert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadUnicode #10")
             Assert.AreEqual("some values", ReReadData.Columns(0).ColumnName, "SaveAndReadUnicode #11")
@@ -79,8 +83,12 @@ Namespace CompuMaster.Test.Data
 
             'read the existing file, auto-detect column-types, take datatable and compare it with the written data: it should be always the same (or must be argumented and discussed with Jochen why it isn't)
             'the number of columns and rows should be always 2
-            Dim ReReadData As DataTable
-            ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Dim ReReadData As DataTable = Nothing
+            Try
+                ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Catch ex As Exception
+                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+            End Try
             Assert.AreEqual(HundredChars & HundredChars & HundredChars & HundredChars, ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFields #11")
         End Sub
 
@@ -99,8 +107,12 @@ Namespace CompuMaster.Test.Data
 
             'read the existing file, auto-detect column-types, take datatable and compare it with the written data: it should be always the same (or must be argumented and discussed with Jochen why it isn't)
             'the number of columns and rows should be always 2
-            Dim ReReadData As DataTable
-            ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Dim ReReadData As DataTable = Nothing
+            Try
+                ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Catch ex As Exception
+                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+            End Try
             Assert.AreEqual("line 1" & System.Environment.NewLine & "line 2" & System.Environment.NewLine & "line 3" & System.Environment.NewLine & "line 4", ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFieldsWithLineBreaks #11")
         End Sub
 
@@ -128,8 +140,12 @@ Namespace CompuMaster.Test.Data
 
             'read the existing file, auto-detect column-types, take datatable and compare it with the written data: it should be always the same (or must be argumented and discussed with Jochen why it isn't)
             'the number of columns and rows should be always 2
-            Dim ReReadData As DataTable
-            ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Dim ReReadData As DataTable = Nothing
+            Try
+                ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Catch ex As Exception
+                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+            End Try
             Assert.AreEqual(0, ReReadData.Rows.Count, "SaveAndReadEmptyStates #10") 'because last 4 lines only contains DBNull/nothing/empty string values
             Assert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadEmptyStates #11") 'but the column "string" has been defined by the column header
         End Sub
@@ -160,14 +176,26 @@ Namespace CompuMaster.Test.Data
 
             'read the existing file, auto-detect column-types, take datatable and compare it with the written data: it should be always the same (or must be argumented and discussed with Jochen why it isn't)
             'the number of columns and rows should be always 2
-            Dim ReReadData As DataTable
-            ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Dim ReReadData As DataTable = Nothing
+            Try
+                ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Catch ex As Exception
+                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+            End Try
             Assert.AreEqual(4, ReReadData.Rows.Count, "SaveAndReadEmptyStates #10") 'because last 2 lines only contains DBNull
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(0), "SaveAndReadEmptyStates #11")
             Assert.AreEqual("", ReReadData.Rows(1)(0), "SaveAndReadEmptyStates #12")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(2)(0), "SaveAndReadEmptyStates #13")
             Assert.AreEqual(DBNull.Value, ReReadData.Rows(3)(0), "SaveAndReadEmptyStates #14")
         End Sub
+
+        Private Function PlatformDependentProcessBitNumber() As String
+            If Environment.Is64BitProcess Then
+                Return "x64"
+            Else
+                Return "x32"
+            End If
+        End Function
 
         <Test()> Public Sub SaveAndReadDBNull()
             'Prepare test data
@@ -200,8 +228,12 @@ Namespace CompuMaster.Test.Data
 
             'read the existing file, auto-detect column-types, take datatable and compare it with the written data: it should be always the same (or must be argumented and discussed with Jochen why it isn't)
             'the number of columns and rows should be always 2
-            Dim ReReadData As DataTable
-            ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Dim ReReadData As DataTable = Nothing
+            Try
+                ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
+            Catch ex As Exception
+                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+            End Try
             Assert.AreEqual("test", ReReadData.TableName, "SaveAndReadDBNull #05")
             Assert.AreEqual(9, ReReadData.Columns.Count, "SaveAndReadDBNull #10")
             Assert.AreEqual("some values", ReReadData.Columns(0).ColumnName, "SaveAndReadDBNull #11")

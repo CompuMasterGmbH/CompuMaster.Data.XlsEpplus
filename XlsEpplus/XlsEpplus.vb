@@ -259,7 +259,7 @@ Namespace CompuMaster.Data
                 If SheetIndex = -1 Then
                     Dim sheet As OfficeOpenXml.ExcelWorksheet
                     sheet = exportWorkbook.Workbook.Worksheets.Add(sheetName)
-                    'SheetIndex = sheet.Index - 1
+                    SheetIndex = sheet.Index - GlobalFirstWorksheetBaseIndex
                     'If inputPath = Nothing AndAlso MyDataTableCounter = 0 Then
                     '    'If new file, then select the new sheet "Data" instead of the empty one (only when creating the very first table)
                     '    'The workbook is a new one
@@ -534,8 +534,8 @@ Namespace CompuMaster.Data
             Dim Result As New DataSet
 
             For sheetCounter As Integer = 1 To importWorkbook.Workbook.Worksheets.Count
-                Dim SheetIndex As Integer = sheetCounter - GlobalFirstWorksheetBaseIndex
-                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(SheetIndex)
+                Dim SheetIndex As Integer = sheetCounter - 1
+                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(SheetIndex + GlobalFirstWorksheetBaseIndex)
 
                 'Detect the column types which must be used
                 Dim sheetData As DataTable = ReadDataTableFromXlsFileCreateDataTableSuggestion(Sheet, Sheet.Name, 0, firstRowContainsColumnNames)
@@ -842,8 +842,8 @@ Namespace CompuMaster.Data
             Dim Result As New ArrayList
 
             For sheetCounter As Integer = 1 To importWorkbook.Workbook.Worksheets.Count
-                Dim SheetIndex As Integer = sheetCounter - GlobalFirstWorksheetBaseIndex
-                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(SheetIndex)
+                Dim SheetIndex As Integer = sheetCounter - 1
+                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(SheetIndex + GlobalFirstWorksheetBaseIndex)
                 Result.Add(Sheet.Name)
             Next
 
@@ -1234,8 +1234,7 @@ Namespace CompuMaster.Data
         Private Shared Function ResolveWorksheetIndex(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal worksheetName As String) As Integer
             Dim sheetIndex As Integer = -1
             For MyCounter As Integer = 0 To workbook.Workbook.Worksheets.Count - 1
-                Dim MySheetIndex As Integer = MyCounter + GlobalFirstWorksheetBaseIndex
-                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MySheetIndex)
+                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MyCounter + GlobalFirstWorksheetBaseIndex)
                 If sheet.Name.ToLower = worksheetName.ToLower Then
                     sheetIndex = MyCounter
                 End If
@@ -1254,8 +1253,7 @@ Namespace CompuMaster.Data
         ''' </remarks>
         Private Shared Function LookupWorksheet(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal worksheetName As String) As OfficeOpenXml.ExcelWorksheet
             For MyCounter As Integer = 0 To workbook.Workbook.Worksheets.Count - 1
-                Dim MySheetIndex As Integer = MyCounter + GlobalFirstWorksheetBaseIndex
-                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MySheetIndex)
+                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MyCounter + GlobalFirstWorksheetBaseIndex)
                 If sheet.Name.ToLower = worksheetName.ToLower Then
                     Return sheet
                 End If
