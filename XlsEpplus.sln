@@ -4,9 +4,9 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "XlsEpplus", "XlsEpplus\XlsEpplus.vbproj", "{14DA1292-0D02-452E-9518-18496AB59231}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "XlsEpplus.Test", "XlsEpplus.Test\XlsEpplus.Test.vbproj", "{1450535C-CAE0-40E3-8C35-73C6C5702F4A}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "XlsEpplus.Test.NetFramework", "XlsEpplus.Test.NetFramework\XlsEpplus.Test.NetFramework.vbproj", "{1450535C-CAE0-40E3-8C35-73C6C5702F4A}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "XlsEpplus.Test_new", "XlsEpplus.Test_new\XlsEpplus.Test_new.vbproj", "{7795E679-AF98-440C-8E58-94A340DCD479}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "XlsEpplus.Test.NetStandard", "XlsEpplus.Test.NetStandard\XlsEpplus.Test.NetStandard.vbproj", "{7795E679-AF98-440C-8E58-94A340DCD479}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,8 +31,8 @@ Global
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.NAnt|Any CPU.Build.0 = NAnt|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1450535C-CAE0-40E3-8C35-73C6C5702F4A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7795E679-AF98-440C-8E58-94A340DCD479}.CI_CD|Any CPU.ActiveCfg = Debug|Any CPU
-		{7795E679-AF98-440C-8E58-94A340DCD479}.CI_CD|Any CPU.Build.0 = Debug|Any CPU
+		{7795E679-AF98-440C-8E58-94A340DCD479}.CI_CD|Any CPU.ActiveCfg = CI_CD|Any CPU
+		{7795E679-AF98-440C-8E58-94A340DCD479}.CI_CD|Any CPU.Build.0 = CI_CD|Any CPU
 		{7795E679-AF98-440C-8E58-94A340DCD479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7795E679-AF98-440C-8E58-94A340DCD479}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7795E679-AF98-440C-8E58-94A340DCD479}.NAnt|Any CPU.ActiveCfg = Debug|Any CPU

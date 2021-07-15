@@ -2,7 +2,8 @@
 /Ankh.Load
 packages
 obj
-/XlsEpplus.Test/bin
+/XlsEpplus.Test.NetFramework/bin
+/XlsEpplus.Test.NetStandard/bin
 *.user
 /XlsEpplus/bin
 /XlsEpplus/New-NuGetPackages

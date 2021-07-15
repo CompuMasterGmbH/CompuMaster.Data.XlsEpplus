@@ -27,7 +27,7 @@ env:
   BUILD_CONFIGURATION: CI_CD
 
   BUILD_OUTPUT: XlsEpplus/bin/CI_CD
-  BUILD_OUTPUT_TEST: XlsEpplus.Test/bin/CI_CD
+  BUILD_OUTPUT_TEST: XlsEpplus.Test.NetStandard/bin/CI_CD
 
 jobs:
 
