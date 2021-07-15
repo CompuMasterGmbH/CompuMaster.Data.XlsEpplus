@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+
+    <IsPackable>false</IsPackable>
+	<AssemblyName>CompuMaster.Test.XlsEpplus.NetStandard</AssemblyName>
+	<RootNamespace />
+	<Configurations>Debug;Release;CI_CD</Configurations>
+	<Product>CompuMaster.Data.XlsEpplus TestLibrary .NET Standard</Product>
+	<PackageId>CompuMaster.Data.XlsEpplus TestLibrary .NET Standard</PackageId>
+	<Company>CompuMaster GmbH</Company>
+	<Authors>Jochen Wezel</Authors>
+	<Version>2021.07.15.100</Version>
+	<PackageLicenseExpression></PackageLicenseExpression>
+	<OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='CI_CD|netcoreapp3.1|AnyCPU'">
+    <DefineConstants>CI_Build=True</DefineConstants>
+    <OutputPath>bin\NetStandard\CI_CD\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|AnyCPU'">
+    <OutputPath>bin\NetStandard\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
+    <OutputPath>bin\NetStandard\Release\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="testfiles\datatype-checks.xlsx" />
+    <None Remove="testfiles\DuplicateColumnNames.xlsx" />
+    <None Remove="testfiles\emptysheets.xlsx" />
+    <None Remove="testfiles\errortype-checks.xlsx" />
+    <None Remove="testfiles\QuestsNAnswers.xlsx" />
+    <None Remove="testfiles\tablevalues.xlsx" />
+    <None Remove="testfiles\vi-projekte.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="testfiles\datatype-checks.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testfiles\DuplicateColumnNames.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testfiles\emptysheets.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testfiles\errortype-checks.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testfiles\QuestsNAnswers.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testfiles\tablevalues.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testfiles\vi-projekte.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CompuMaster.Data" Version="3.0.2021.714" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="NUnit" Version="3.13.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="coverlet.collector" Version="3.0.2" />
+	<PackageReference Include="JUnitTestLogger4GitHub" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XlsEpplus\XlsEpplus.vbproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Test.XlsEpplus.vb">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

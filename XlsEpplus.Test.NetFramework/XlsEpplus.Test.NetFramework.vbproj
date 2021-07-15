@@ -11,7 +11,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>CompuMaster.Test.XlsEpplus</AssemblyName>
+    <AssemblyName>CompuMaster.Test.XlsEpplus.NetFramework</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
@@ -54,8 +54,8 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\</OutputPath>
-    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
+    <OutputPath>bin\NetStandard\Debug\</OutputPath>
+    <DocumentationFile>CompuMaster.Test.XlsEpplus.NetFramework.xml</DocumentationFile>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -74,28 +74,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\</OutputPath>
-    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
-    <BaseAddress>285212672</BaseAddress>
-    <ConfigurationOverrideFile>
-    </ConfigurationOverrideFile>
-    <DefineConstants>
-    </DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-    <DebugType>none</DebugType>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'NAnt|AnyCPU' ">
-    <OutputPath>bin\</OutputPath>
-    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
+    <OutputPath>bin\NetStandard\Release\</OutputPath>
+    <DocumentationFile>CompuMaster.Test.XlsEpplus.NetFramework.xml</DocumentationFile>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
@@ -115,9 +95,9 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'CI_CD|AnyCPU' ">
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\CI_CD\</OutputPath>
+    <OutputPath>bin\NetStandard\CI_CD\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
-    <DocumentationFile>CompuMaster.Test.XlsEpplus.xml</DocumentationFile>
+    <DocumentationFile>CompuMaster.Test.XlsEpplus.NetFramework.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <WarningLevel>1</WarningLevel>
     <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
@@ -153,6 +133,7 @@
     <Compile Include="Test.XlsEpplusVsXlsReader.vb" />
     <Compile Include="GlobalTestSetup.vb" />
     <Compile Include="SupporedExcelFeatures.vb" />
+    <Compile Include="WorksheetsIndexBase1Or0TestNetFramework.vb" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="testfiles\datatype-checks.xlsx">

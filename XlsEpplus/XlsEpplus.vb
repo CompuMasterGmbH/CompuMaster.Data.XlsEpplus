@@ -245,7 +245,7 @@ Namespace CompuMaster.Data
                         sheetName = exportWorkbook.Workbook.Worksheets(exportWorkbook.Workbook.View.ActiveTab).Name
                     Case XlsEpplus.SpecialSheet.FirstSheet
                         If exportWorkbook.Workbook.Worksheets.Count > 0 Then
-                            sheetName = exportWorkbook.Workbook.Worksheets(0).Name
+                            sheetName = exportWorkbook.Workbook.Worksheets.First.Name
                         Else
                             sheetName = dataTable.TableName
                         End If
@@ -259,20 +259,21 @@ Namespace CompuMaster.Data
                 If SheetIndex = -1 Then
                     Dim sheet As OfficeOpenXml.ExcelWorksheet
                     sheet = exportWorkbook.Workbook.Worksheets.Add(sheetName)
-                    SheetIndex = sheet.Index - 1
-                    If inputPath = Nothing AndAlso MyDataTableCounter = 0 Then
-                        'If new file, then select the new sheet "Data" instead of the empty one (only when creating the very first table)
-                        'The workbook is a new one
-                        'Sheet might contain a first sheet name at position 1 which is not our new sheet
-                        If MyDataTableCounter = 0 AndAlso exportWorkbook.Workbook.Worksheets.Count = 2 AndAlso SheetIndex = 1 Then
-                            'At position 0 is an empty sheet which should be deleted
-                            exportWorkbook.Workbook.Worksheets.Delete(1)
-                            SheetIndex -= 1
-                        End If
-                    End If
+                    SheetIndex = sheet.Index - GlobalFirstWorksheetBaseIndex
+                    'If inputPath = Nothing AndAlso MyDataTableCounter = 0 Then
+                    '    'If new file, then select the new sheet "Data" instead of the empty one (only when creating the very first table)
+                    '    'The workbook is a new one
+                    '    'Sheet might contain a first sheet name at first position which is not our new sheet
+                    '    If MyDataTableCounter = 0 AndAlso exportWorkbook.Workbook.Worksheets.Count = 2 AndAlso SheetIndex = 1 Then
+                    '        'At position 0 is an empty sheet which should be deleted
+                    '        exportWorkbook.Workbook.Worksheets.Delete(exportWorkbook.Workbook.Worksheets.First)
+                    '        SheetIndex -= 1
+                    '    End If
+                    'End If
                 End If
 
-                Dim WorkSheet As OfficeOpenXml.ExcelWorksheet = exportWorkbook.Workbook.Worksheets(SheetIndex + 1) 'CType(exportWorkbook.Workbook.Worksheets(SheetIndex), OfficeOpenXml.ExcelWorksheet)
+                Dim WorkSheet As OfficeOpenXml.ExcelWorksheet
+                WorkSheet = exportWorkbook.Workbook.Worksheets(SheetIndex + GlobalFirstWorksheetBaseIndex) 'CType(exportWorkbook.Workbook.Worksheets(SheetIndex), OfficeOpenXml.ExcelWorksheet)
                 'WorkSheet.Cells(1, 1).LoadFromDataTable(dataTable, True)
 
                 'Paste the column headers
@@ -375,6 +376,25 @@ Namespace CompuMaster.Data
             Return exportWorkbook
 
         End Function
+
+        ''' <summary>
+        ''' Depending on current assembly version and platform, worksheet indexes are 1 based or 0 based
+        ''' </summary>
+        ''' <returns></returns>
+        Friend Shared ReadOnly Property GlobalFirstWorksheetBaseIndex As Integer
+            Get
+                Dim Result As Integer?
+                If Result.HasValue = False Then
+                    Dim wbp As New OfficeOpenXml.ExcelPackage
+                    If wbp.Compatibility.IsWorksheets1Based Then
+                        Result = 1
+                    Else
+                        Result = 0
+                    End If
+                End If
+                Return Result.Value
+            End Get
+        End Property
 
         ''' <summary>
         ''' Excel file formats
@@ -514,7 +534,8 @@ Namespace CompuMaster.Data
             Dim Result As New DataSet
 
             For sheetCounter As Integer = 1 To importWorkbook.Workbook.Worksheets.Count
-                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(sheetCounter)
+                Dim SheetIndex As Integer = sheetCounter - 1
+                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(SheetIndex + GlobalFirstWorksheetBaseIndex)
 
                 'Detect the column types which must be used
                 Dim sheetData As DataTable = ReadDataTableFromXlsFileCreateDataTableSuggestion(Sheet, Sheet.Name, 0, firstRowContainsColumnNames)
@@ -622,7 +643,7 @@ Namespace CompuMaster.Data
 
             'Save the changed worksheet
             importWorkbook = LoadWorkbookFile(inputPath)
-            Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(1)
+            Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets.First
 
             'Detect the column types which must be used
             Dim Result As DataTable = ReadDataTableFromXlsFileCreateDataTableSuggestion(Sheet, Sheet.Name, startReadingAtRowIndex, firstRowContainsColumnNames)
@@ -634,7 +655,6 @@ Namespace CompuMaster.Data
             Return Result
 
         End Function
-
 
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
@@ -822,7 +842,8 @@ Namespace CompuMaster.Data
             Dim Result As New ArrayList
 
             For sheetCounter As Integer = 1 To importWorkbook.Workbook.Worksheets.Count
-                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(sheetCounter)
+                Dim SheetIndex As Integer = sheetCounter - 1
+                Dim Sheet As OfficeOpenXml.ExcelWorksheet = importWorkbook.Workbook.Worksheets(SheetIndex + GlobalFirstWorksheetBaseIndex)
                 Result.Add(Sheet.Name)
             Next
 
@@ -1213,7 +1234,7 @@ Namespace CompuMaster.Data
         Private Shared Function ResolveWorksheetIndex(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal worksheetName As String) As Integer
             Dim sheetIndex As Integer = -1
             For MyCounter As Integer = 0 To workbook.Workbook.Worksheets.Count - 1
-                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MyCounter + 1)
+                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MyCounter + GlobalFirstWorksheetBaseIndex)
                 If sheet.Name.ToLower = worksheetName.ToLower Then
                     sheetIndex = MyCounter
                 End If
@@ -1230,13 +1251,14 @@ Namespace CompuMaster.Data
         ''' <returns>An excel sheet</returns>
         ''' <remarks>
         ''' </remarks>
-        Private Shared Function LookupWorksheet(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal sheetName As String) As OfficeOpenXml.ExcelWorksheet
-            Dim resolvedIndex As Integer = ResolveWorksheetIndex(workbook, sheetName)
-            If resolvedIndex = -1 Then
-                Throw New Exception("Worksheet """ & sheetName & """ hasn't been found")
-            Else
-                Return workbook.Workbook.Worksheets(resolvedIndex + 1)
-            End If
+        Private Shared Function LookupWorksheet(ByVal workbook As OfficeOpenXml.ExcelPackage, ByVal worksheetName As String) As OfficeOpenXml.ExcelWorksheet
+            For MyCounter As Integer = 0 To workbook.Workbook.Worksheets.Count - 1
+                Dim sheet As OfficeOpenXml.ExcelWorksheet = workbook.Workbook.Worksheets(MyCounter + GlobalFirstWorksheetBaseIndex)
+                If sheet.Name.ToLower = worksheetName.ToLower Then
+                    Return sheet
+                End If
+            Next
+            Throw New Exception("Worksheet """ & worksheetName & """ hasn't been found")
         End Function
 #End Region
 
