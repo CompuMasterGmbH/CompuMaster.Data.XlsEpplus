@@ -727,14 +727,15 @@ Namespace CompuMaster.Data
         Public Shared Function ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal sheetName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
                 Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
-            ElseIf sheetName = Nothing Then
-                Throw New ArgumentNullException(NameOf(sheetName), "A sheet must be specified")
             End If
 
             Dim importWorkbook As OfficeOpenXml.ExcelPackage
 
             'Save the changed worksheet
             importWorkbook = LoadWorkbookFile(inputPath)
+            If sheetName = Nothing Then
+                sheetName = importWorkbook.Workbook.Worksheets.First.Name
+            End If
             Dim Sheet As OfficeOpenXml.ExcelWorksheet = LookupWorksheet(importWorkbook, sheetName)
 
             'Detect the column types which must be used
@@ -775,6 +776,31 @@ Namespace CompuMaster.Data
             ReadDataTableFromXlsFile(inputPath, sheetName, 0, firstRowContainsColumnNames, data)
         End Sub
 
+        ''' <summary>
+        '''     Read the data from first sheet of an excel sheet into a datatable
+        ''' </summary>
+        ''' <param name="inputPath">The filename of the excel document</param>
+        ''' <param name="startReadingAtRowIndex">Sometimes, excel sheets start with an introductional/explaining header instead of just column names, e.g. a table may start at row index 2 (in excel line 3)</param>
+        ''' <param name="firstRowContainsColumnNames">Indicate wether the first row contains column names (true) or values (false)</param>
+        ''' <param name="data">The datatable which shall be filled; only columns which exist in this target table will be imported</param>
+        ''' <remarks>
+        '''     Conversion errors will not be ignored!
+        ''' 
+        '''     Excel error values
+        '''     #NULL! 1   --> Cell value of type System.Exception with error details
+        '''     #DIV/0! 2  --> Double.NaN
+        '''     #VALUE! 3   --> Cell value of type System.Exception with error details
+        '''     #REF! 4  --> Cell value of type System.Exception with error details
+        '''     #NAME? 5   --> Cell value of type System.Exception with error details
+        '''     #NUM! 6   --> Cell value of type System.Exception with error details
+        '''     #NA 7      --> Cell value of type System.Exception with error details
+        '''     {blank}    --> DBNull
+        ''' 
+        '''     Dependent on the firstRowContainsColumnNames parameter, the datatable parameter must contain a table with column names as they're defined in the first row of the excel sheet or the table's columnn must have the name of the column index in excel ("1", "2", "3", ...)
+        ''' </remarks>
+        Public Shared Sub ReadDataTableFromXlsFile(ByVal inputPath As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean, ByVal data As DataTable)
+            ReadDataTableFromXlsFile(inputPath, Nothing, startReadingAtRowIndex, firstRowContainsColumnNames, data)
+        End Sub
 
         ''' <summary>
         '''     Read the data from an excel sheet into a datatable
@@ -803,8 +829,6 @@ Namespace CompuMaster.Data
 
             If inputPath = Nothing OrElse (New System.IO.FileInfo(inputPath)).FullName = Nothing Then
                 Throw New ArgumentNullException(NameOf(inputPath), "The input filename is required")
-            ElseIf sheetName = Nothing Then
-                Throw New ArgumentNullException(NameOf(sheetName), "A sheet must be specified")
             ElseIf data Is Nothing Then
                 Throw New ArgumentNullException(NameOf(data), "A datatable must be predefined which shall hold all the data")
             End If
@@ -813,7 +837,13 @@ Namespace CompuMaster.Data
 
             'Save the changed worksheet
             importWorkbook = LoadWorkbookFile(inputPath)
+            If sheetName = Nothing Then
+                sheetName = importWorkbook.Workbook.Worksheets.First.Name
+            End If
             Dim Sheet As OfficeOpenXml.ExcelWorksheet = LookupWorksheet(importWorkbook, sheetName)
+
+            'Extend table's column set as long as columns count matches
+            ReadDataTableFromXlsFileExtendDataTableColumns(data, Sheet, 0, firstRowContainsColumnNames)
 
             'Read all data and put it into the datatable
             ReadDataTableFromXlsFile(Sheet, startReadingAtRowIndex, firstRowContainsColumnNames, data)
@@ -1102,7 +1132,6 @@ Namespace CompuMaster.Data
             End If
         End Function
 
-
         ''' <summary>
         '''     Analyze the values in the complete sheet for their data type and create a data table with those corresponding column data types to hold all the data of the sheet
         ''' </summary>
@@ -1116,12 +1145,25 @@ Namespace CompuMaster.Data
         Private Shared Function ReadDataTableFromXlsFileCreateDataTableSuggestion(ByVal sheet As OfficeOpenXml.ExcelWorksheet, ByVal tableName As String, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean) As DataTable
             'Create a datatable which can hold all the data available in that sheet (pay attention to the automatic column type detection)
             Dim Result As New DataTable(tableName)
+            ReadDataTableFromXlsFileExtendDataTableColumns(Result, sheet, startReadingAtRowIndex, firstRowContainsColumnNames)
+            Return Result
+        End Function
 
+        ''' <summary>
+        '''     Analyze the values in the complete sheet for their data type and create a data table with those corresponding column data types to hold all the data of the sheet
+        ''' </summary>
+        ''' <param name="inputTable">The target table</param>
+        ''' <param name="sheet">A sheet</param>
+        ''' <param name="startReadingAtRowIndex">Sometimes, excel sheets start with an introductional/explaining header instead of just column names, e.g. a table may start at row index 2 (in excel line 3)</param>
+        ''' <param name="firstRowContainsColumnNames">Indicate wether the first row contains column names (true) or values (false)</param>
+        ''' <remarks>
+        ''' </remarks>
+        Private Shared Sub ReadDataTableFromXlsFileExtendDataTableColumns(inputTable As System.Data.DataTable, ByVal sheet As OfficeOpenXml.ExcelWorksheet, ByVal startReadingAtRowIndex As Integer, ByVal firstRowContainsColumnNames As Boolean)
             'Add required amount of columns
             'sheet.CalcDimensions() 'Calculate the sheet end positions (to prevent bug that this information is 0, e. g. after saving and reloading with this component)
             Dim LastSheetContentRowIndex As Integer = LookupLastContentRowIndex(sheet)
             Dim LastSheetContentColumnIndex As Integer = LookupLastContentColumnIndex(sheet)
-            For colCounter As Integer = 0 To LastSheetContentColumnIndex
+            For colCounter As Integer = inputTable.Columns.Count To LastSheetContentColumnIndex
                 'step through all rows and determine if there is a common data type, e. g. Date, String, Double
                 Dim fieldType As System.Type = Nothing
                 Dim firstContentRowIndex As Integer
@@ -1196,16 +1238,14 @@ Namespace CompuMaster.Data
                 If firstRowContainsColumnNames Then
                     'hint: also detect e.g. column header with date formats, e.g. "May 2005"
                     Dim ColName As String = CellValueAsString(sheet.Cells(startReadingAtRowIndex + 1, colCounter + 1))
-                    ColName = Utils.LookupUniqueColumnName(Result, ColName)
+                    ColName = Utils.LookupUniqueColumnName(inputTable, ColName)
                     newCol = New DataColumn(ColName, fieldType) 'column gets column name of 1st row
                 Else
                     newCol = New DataColumn(Nothing, fieldType)
                 End If
-                Result.Columns.Add(newCol)
+                inputTable.Columns.Add(newCol)
             Next
-
-            Return Result
-        End Function
+        End Sub
 
         ''' <summary>
         ''' Try to lookup the cell's value to a string anyhow

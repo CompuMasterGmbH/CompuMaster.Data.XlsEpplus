@@ -703,6 +703,25 @@ Namespace CompuMaster.Test.Data
             Assert.AreEqual(1, dt.Rows.Count, "Row-Length")
             Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt))
         End Sub
+
+        <Test> Public Sub ReadTestFileDuplicateColumnNamesIntoTargetTable()
+            Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\DuplicateColumnNames.xlsx")
+
+            Dim TargetTable As DataTable
+
+            TargetTable = New DataTable
+            TargetTable.Columns.Add("ID", GetType(String))
+            CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, Nothing, 1, True, TargetTable)
+            Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(TargetTable))
+            Assert.AreEqual(1, TargetTable.Rows.Count, "Row-Length")
+            Assert.AreEqual(CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, 1, True).Columns.Count, TargetTable.Columns.Count, "Columns-Count")
+
+            TargetTable = New DataTable
+            TargetTable.Columns.Add("ID", GetType(String))
+            CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, 1, True, TargetTable)
+            Assert.AreEqual(1, TargetTable.Rows.Count, "Row-Length")
+            Assert.AreEqual(CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, 1, True).Columns.Count, TargetTable.Columns.Count, "Columns-Count")
+        End Sub
     End Class
 
 End Namespace
