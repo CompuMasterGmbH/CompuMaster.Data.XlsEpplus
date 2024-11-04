@@ -11,7 +11,7 @@
 	<PackageId>CompuMaster.Data.XlsEpplus TestLibrary .NET Standard</PackageId>
 	<Company>CompuMaster GmbH</Company>
 	<Authors>Jochen Wezel</Authors>
-	<Version>2021.07.15.100</Version>
+	<Version>2024.11.04.100</Version>
 	<PackageLicenseExpression></PackageLicenseExpression>
 	<OptionStrict>On</OptionStrict>
   </PropertyGroup>
