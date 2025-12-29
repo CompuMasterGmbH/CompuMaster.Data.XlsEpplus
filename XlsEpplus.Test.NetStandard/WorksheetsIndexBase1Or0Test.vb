@@ -1,4 +1,5 @@
 ﻿Imports NUnit.Framework
+Imports NUnit.Framework.Legacy
 
 Namespace CompuMaster.Test.Data
 
@@ -8,9 +9,9 @@ Namespace CompuMaster.Test.Data
 
         <Test> Public Sub GlobalFirstWorksheetIndex()
 #If NETFRAMEWORK Then
-            Assert.AreEqual(1, CompuMaster.Data.XlsEpplus.GlobalFirstWorksheetBaseIndex)
+            ClassicAssert.AreEqual(1, CompuMaster.Data.XlsEpplus.GlobalFirstWorksheetBaseIndex)
 #Else
-            Assert.AreEqual(0, CompuMaster.Data.XlsEpplus.GlobalFirstWorksheetBaseIndex)
+            ClassicAssert.AreEqual(0, CompuMaster.Data.XlsEpplus.GlobalFirstWorksheetBaseIndex)
 #End If
         End Sub
 

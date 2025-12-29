@@ -1,4 +1,5 @@
 ﻿Imports NUnit.Framework
+Imports NUnit.Framework.Legacy
 Imports System.Data
 
 Namespace CompuMaster.Test.Data
@@ -6,6 +7,7 @@ Namespace CompuMaster.Test.Data
     <TestFixture()>
     Public Class SupportedExcelFeatures
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test> Sub TableWithCalculatedCellsTargettingTableColumnsByColumnName()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\tablevalues.xlsx")
             'Dim ds As DataSet = CompuMaster.Data.XlsEpplus.ReadDataSetFromXlsFile(file, True)
@@ -16,7 +18,7 @@ Namespace CompuMaster.Test.Data
             Dim FormattedTextTable As String = CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt)
             Console.WriteLine(FormattedTextTable)
             If FormattedTextTable.Contains("NotImplementedException") Then
-                Assert.Fail("Found cell content with ""NotImplementedException""")
+                ClassicAssert.Fail("Found cell content with ""NotImplementedException""")
             End If
         End Sub
 

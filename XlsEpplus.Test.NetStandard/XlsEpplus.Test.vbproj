@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 	<TargetFrameworks>net8.0;net48</TargetFrameworks>
@@ -66,9 +66,12 @@
   <ItemGroup>
     <PackageReference Include="CompuMaster.Data" Version="3.0.2025.903" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="NUnit" Version="3.13.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
-    <PackageReference Include="coverlet.collector" Version="3.0.2" />
+    <PackageReference Include="NUnit" Version="4.4.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="[5.2.0,6.0.0)" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 	<PackageReference Include="JUnitTestLogger4GitHub" Version="1.1.1" />
   </ItemGroup>
 

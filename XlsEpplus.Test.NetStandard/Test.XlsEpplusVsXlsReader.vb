@@ -1,4 +1,5 @@
 ﻿Imports NUnit.Framework
+Imports NUnit.Framework.Legacy
 Imports System.Data
 
 Namespace CompuMaster.Test.Data
@@ -54,18 +55,18 @@ Namespace CompuMaster.Test.Data
             Try
                 ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
             Catch ex As Exception
-                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+                ClassicAssert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
             End Try
-            Assert.AreEqual("test", ReReadData.TableName, "SaveAndReadUnicode #05")
-            Assert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadUnicode #10")
-            Assert.AreEqual("some values", ReReadData.Columns(0).ColumnName, "SaveAndReadUnicode #11")
-            Assert.AreEqual(6, ReReadData.Rows.Count, "SaveAndReadUnicode #20")
-            Assert.AreEqual("ПК дома", ReReadData.Rows(0)(0), "SaveAndReadUnicode #21")
-            Assert.AreEqual("^!§$%&/()=?´`~+*#'-_.:,;<>|\ÄÖÜäöü@€", ReReadData.Rows(1)(0), "SaveAndReadUnicode #22")
-            Assert.AreEqual("セキュリティ更新プログラム", ReReadData.Rows(2)(0), "SaveAndReadUnicode #23")
-            Assert.AreEqual("보안 비디오", ReReadData.Rows(3)(0), "SaveAndReadUnicode #24")
-            Assert.AreEqual("Preuzimanje predložaka na Office Online", ReReadData.Rows(4)(0), "SaveAndReadUnicode #25")
-            Assert.AreEqual("من عنده تأشيرة سكن في أيّ من دول مجلس التعاون الخليجي", ReReadData.Rows(5)(0), "SaveAndReadUnicode #26")
+            ClassicAssert.AreEqual("test", ReReadData.TableName, "SaveAndReadUnicode #05")
+            ClassicAssert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadUnicode #10")
+            ClassicAssert.AreEqual("some values", ReReadData.Columns(0).ColumnName, "SaveAndReadUnicode #11")
+            ClassicAssert.AreEqual(6, ReReadData.Rows.Count, "SaveAndReadUnicode #20")
+            ClassicAssert.AreEqual("ПК дома", ReReadData.Rows(0)(0), "SaveAndReadUnicode #21")
+            ClassicAssert.AreEqual("^!§$%&/()=?´`~+*#'-_.:,;<>|\ÄÖÜäöü@€", ReReadData.Rows(1)(0), "SaveAndReadUnicode #22")
+            ClassicAssert.AreEqual("セキュリティ更新プログラム", ReReadData.Rows(2)(0), "SaveAndReadUnicode #23")
+            ClassicAssert.AreEqual("보안 비디오", ReReadData.Rows(3)(0), "SaveAndReadUnicode #24")
+            ClassicAssert.AreEqual("Preuzimanje predložaka na Office Online", ReReadData.Rows(4)(0), "SaveAndReadUnicode #25")
+            ClassicAssert.AreEqual("من عنده تأشيرة سكن في أيّ من دول مجلس التعاون الخليجي", ReReadData.Rows(5)(0), "SaveAndReadUnicode #26")
         End Sub
 
         <Test()> Public Sub SaveAndReadExtraLargeFields()
@@ -88,9 +89,9 @@ Namespace CompuMaster.Test.Data
             Try
                 ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
             Catch ex As Exception
-                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+                ClassicAssert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
             End Try
-            Assert.AreEqual(HundredChars & HundredChars & HundredChars & HundredChars, ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFields #11")
+            ClassicAssert.AreEqual(HundredChars & HundredChars & HundredChars & HundredChars, ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFields #11")
         End Sub
 
         <Test()> Public Sub SaveAndReadExtraFieldsWithLineBreaks()
@@ -112,9 +113,9 @@ Namespace CompuMaster.Test.Data
             Try
                 ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
             Catch ex As Exception
-                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+                ClassicAssert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
             End Try
-            Assert.AreEqual("line 1" & System.Environment.NewLine & "line 2" & System.Environment.NewLine & "line 3" & System.Environment.NewLine & "line 4", ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFieldsWithLineBreaks #11")
+            ClassicAssert.AreEqual("line 1" & System.Environment.NewLine & "line 2" & System.Environment.NewLine & "line 3" & System.Environment.NewLine & "line 4", ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFieldsWithLineBreaks #11")
         End Sub
 
         <Test()> Public Sub SaveAndReadLastCell()
@@ -145,10 +146,10 @@ Namespace CompuMaster.Test.Data
             Try
                 ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
             Catch ex As Exception
-                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+                ClassicAssert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
             End Try
-            Assert.AreEqual(0, ReReadData.Rows.Count, "SaveAndReadEmptyStates #10") 'because last 4 lines only contains DBNull/nothing/empty string values
-            Assert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadEmptyStates #11") 'but the column "string" has been defined by the column header
+            ClassicAssert.AreEqual(0, ReReadData.Rows.Count, "SaveAndReadEmptyStates #10") 'because last 4 lines only contains DBNull/nothing/empty string values
+            ClassicAssert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadEmptyStates #11") 'but the column "string" has been defined by the column header
         End Sub
 
         <Test()> Public Sub SaveAndReadEmptyStates()
@@ -181,13 +182,13 @@ Namespace CompuMaster.Test.Data
             Try
                 ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
             Catch ex As Exception
-                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+                ClassicAssert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
             End Try
-            Assert.AreEqual(4, ReReadData.Rows.Count, "SaveAndReadEmptyStates #10") 'because last 2 lines only contains DBNull
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(0), "SaveAndReadEmptyStates #11")
-            Assert.AreEqual("", ReReadData.Rows(1)(0), "SaveAndReadEmptyStates #12")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(2)(0), "SaveAndReadEmptyStates #13")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(3)(0), "SaveAndReadEmptyStates #14")
+            ClassicAssert.AreEqual(4, ReReadData.Rows.Count, "SaveAndReadEmptyStates #10") 'because last 2 lines only contains DBNull
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(0), "SaveAndReadEmptyStates #11")
+            ClassicAssert.AreEqual("", ReReadData.Rows(1)(0), "SaveAndReadEmptyStates #12")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(2)(0), "SaveAndReadEmptyStates #13")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(3)(0), "SaveAndReadEmptyStates #14")
         End Sub
 
         Private Function PlatformDependentProcessBitNumber() As String
@@ -233,21 +234,21 @@ Namespace CompuMaster.Test.Data
             Try
                 ReReadData = CompuMaster.Data.XlsReader.ReadDataTableFromXlsFile(TempFile, "test")
             Catch ex As Exception
-                Assert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
+                ClassicAssert.Ignore("MS Excel Provider support not installed for current platform " & System.Environment.OSVersion.Platform & "/" & PlatformDependentProcessBitNumber() & " (" & System.Environment.OSVersion.ToString & ")")
             End Try
-            Assert.AreEqual("test", ReReadData.TableName, "SaveAndReadDBNull #05")
-            Assert.AreEqual(9, ReReadData.Columns.Count, "SaveAndReadDBNull #10")
-            Assert.AreEqual("some values", ReReadData.Columns(0).ColumnName, "SaveAndReadDBNull #11")
-            Assert.AreEqual(1, ReReadData.Rows.Count, "SaveAndReadDBNull #20")
-            Assert.AreEqual("this is a DBNull-Test!", ReReadData.Rows(0)(0), "SaveAndReadDBNull #21")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(1), "SaveAndReadDBNull #22")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(2), "SaveAndReadDBNull #23")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(3), "SaveAndReadDBNull #24")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(4), "SaveAndReadDBNull #25")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(5), "SaveAndReadDBNull #26")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(6), "SaveAndReadDBNull #27")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(7), "SaveAndReadDBNull #28")
-            Assert.AreEqual(DBNull.Value, ReReadData.Rows(0)(8), "SaveAndReadDBNull #29")
+            ClassicAssert.AreEqual("test", ReReadData.TableName, "SaveAndReadDBNull #05")
+            ClassicAssert.AreEqual(9, ReReadData.Columns.Count, "SaveAndReadDBNull #10")
+            ClassicAssert.AreEqual("some values", ReReadData.Columns(0).ColumnName, "SaveAndReadDBNull #11")
+            ClassicAssert.AreEqual(1, ReReadData.Rows.Count, "SaveAndReadDBNull #20")
+            ClassicAssert.AreEqual("this is a DBNull-Test!", ReReadData.Rows(0)(0), "SaveAndReadDBNull #21")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(1), "SaveAndReadDBNull #22")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(2), "SaveAndReadDBNull #23")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(3), "SaveAndReadDBNull #24")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(4), "SaveAndReadDBNull #25")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(5), "SaveAndReadDBNull #26")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(6), "SaveAndReadDBNull #27")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(7), "SaveAndReadDBNull #28")
+            ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(8), "SaveAndReadDBNull #29")
         End Sub
 #End If
 
