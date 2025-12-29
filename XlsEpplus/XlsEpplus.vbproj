@@ -9,7 +9,8 @@
 		<Copyright>2010-2025 CompuMaster GmbH</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus</PackageProjectUrl>
-		<PackageIcon>logo_64x64.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>logo_64x64.png</PackageIcon>
 		<RepositoryUrl>https://github.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags> CompuMaster Data DataTable Epplus Xlsx Xls </PackageTags>
