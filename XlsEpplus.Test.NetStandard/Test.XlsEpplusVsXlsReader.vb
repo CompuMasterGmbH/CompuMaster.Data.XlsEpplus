@@ -3,7 +3,8 @@ Imports System.Data
 
 Namespace CompuMaster.Test.Data
 
-    <TestFixture()> Public Class XlsEpplusVsXlsReader
+    <TestFixture()>
+    Public Class XlsEpplusVsXlsReader
         Implements IDisposable
 
         Private ReadOnly Property TempFile() As String

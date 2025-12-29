@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>
+	<TargetFrameworks>net8.0;net48</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
 	<AssemblyName>CompuMaster.Test.XlsEpplus.NetStandard</AssemblyName>
 	<RootNamespace />
 	<Configurations>Debug;Release;CI_CD</Configurations>
-	<Product>CompuMaster.Data.XlsEpplus TestLibrary .NET Standard</Product>
-	<PackageId>CompuMaster.Data.XlsEpplus TestLibrary .NET Standard</PackageId>
+	<Product>CompuMaster.Data.XlsEpplus TestLibrary</Product>
+	<PackageId>CompuMaster.Data.XlsEpplus TestLibrary</PackageId>
 	<Company>CompuMaster GmbH</Company>
 	<Authors>Jochen Wezel</Authors>
-	<Version>2024.11.04.100</Version>
+	<Version>2025.12.29.0</Version>
 	<PackageLicenseExpression></PackageLicenseExpression>
 	<OptionStrict>On</OptionStrict>
   </PropertyGroup>
@@ -64,10 +64,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CompuMaster.Data" Version="3.0.2021.714" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="CompuMaster.Data" Version="3.0.2025.903" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="NUnit" Version="3.13.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
 	<PackageReference Include="JUnitTestLogger4GitHub" Version="1.1.1" />
   </ItemGroup>

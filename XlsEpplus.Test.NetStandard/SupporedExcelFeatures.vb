@@ -3,7 +3,8 @@ Imports System.Data
 
 Namespace CompuMaster.Test.Data
 
-    <TestFixture()> Public Class SupportedExcelFeatures
+    <TestFixture()>
+    Public Class SupportedExcelFeatures
 
         <Test> Sub TableWithCalculatedCellsTargettingTableColumnsByColumnName()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\tablevalues.xlsx")
