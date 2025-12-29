@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<RootNamespace></RootNamespace>
 		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net6.0;net48;net45</TargetFrameworks>
-		<Version>3.0.2024.1104</Version>
+		<Version>3.0.2025.1229</Version>
 		<Authors>Jochen Wezel</Authors>
 		<Company>CompuMaster GmbH</Company>
-		<Copyright>2010-2024 CompuMaster GmbH</Copyright>
+		<Copyright>2010-2025 CompuMaster GmbH</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus</PackageProjectUrl>
 		<PackageIcon>logo_64x64.png</PackageIcon>
@@ -92,7 +92,11 @@
 	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
-	  <None Include="..\logo_64x64.png">
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\logo_64x64.png">
 	    <Pack>True</Pack>
 	    <PackagePath></PackagePath>
 	  </None>
