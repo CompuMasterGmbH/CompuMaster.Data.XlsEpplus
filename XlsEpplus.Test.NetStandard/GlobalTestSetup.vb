@@ -57,6 +57,7 @@ Namespace CompuMaster.Test.Data
                 While cur IsNot Nothing
                     If TypeOf cur Is DllNotFoundException Then Return True
                     If TypeOf cur Is TypeInitializationException Then Return True
+                    If TypeOf cur Is PlatformNotSupportedException Then Return True
                     cur = cur.InnerException
                 End While
                 Return False
