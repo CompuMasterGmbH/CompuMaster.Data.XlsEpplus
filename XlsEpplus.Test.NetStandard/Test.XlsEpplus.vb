@@ -18,6 +18,7 @@ Namespace CompuMaster.Test.Data
             End Get
         End Property
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadSimple()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -56,6 +57,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual("this is the last cell" & System.Environment.NewLine & "2nd line" & System.Environment.NewLine & "3rd line" & System.Environment.NewLine & "4th line" & vbTab & "with a tab char", ReReadData.Rows(1)(1), "SaveAndReadSimple #24")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadUnicode()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -101,6 +103,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual("من عنده تأشيرة سكن في أيّ من دول مجلس التعاون الخليجي", ReReadData.Rows(5)(0), "SaveAndReadUnicode #26")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadExtraLargeFields()
             Const HundredChars As String = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
             'Prepare test data
@@ -122,6 +125,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(HundredChars & HundredChars & HundredChars & HundredChars, ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFields #11")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadExtraFieldsWithLineBreaks()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -142,6 +146,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual("line 1" & System.Environment.NewLine & "line 2" & System.Environment.NewLine & "line 3" & System.Environment.NewLine & "line 4", ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFieldsWithLineBreaks #11")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadDBNull()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -190,6 +195,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(0)(8), "SaveAndReadDBNull #29")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test(), Ignore("ToBeImplemented after Epplus bug has been fixed, see https://github.com/JanKallman/EPPlus/issues/573")> Public Sub SaveAndReadDoubleSpecials()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -231,6 +237,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(54246723.14521, ReReadData.Rows(4)(0), "SaveAndReadDoubleSpecials #25")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub LastCellDetection()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -261,6 +268,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadEmptyStates #11") 'but the column "string" has been defined by the column header
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadEmptyStates()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -296,6 +304,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(DBNull.Value, ReReadData.Rows(3)(0), "SaveAndReadEmptyStates #14")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadDataTypes()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -433,6 +442,7 @@ Namespace CompuMaster.Test.Data
         ''' 	[adminwezel]	02.02.2007	Created
         ''' </history>
         ''' -----------------------------------------------------------------------------
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveFiveColumnsAndReadFirstAndThirdAndFifthColumn()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -474,12 +484,14 @@ Namespace CompuMaster.Test.Data
 
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test> Public Sub ReadEmptySheetDimensions()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\emptysheets.xlsx")
             Dim ds As DataSet = CompuMaster.Data.XlsEpplus.ReadDataSetFromXlsFile(file, False)
             ClassicAssert.Pass()
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadDataTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\datatype-checks.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, True)
@@ -532,6 +544,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(312.0, dt.Rows(0)(26), "Short 312")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadErrorTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\errortype-checks.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, True)
@@ -632,6 +645,7 @@ Namespace CompuMaster.Test.Data
             Return CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt)
         End Function
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadTestFileVIProjektFixedStringColTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\vi-projekte.xlsx")
             Dim dt As New DataTable("Root")
@@ -651,6 +665,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(19, dt.Rows.Count, "Row-Length")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadTestFileVIProjektFixedColTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\vi-projekte.xlsx")
             Dim dt As New DataTable("Root")
@@ -668,6 +683,7 @@ Namespace CompuMaster.Test.Data
             CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, "Alban", True, dt)
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadTestFileVIProjektDynamicColTypes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\vi-projekte.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, "Alban", True)
@@ -685,6 +701,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(GetType(String), dt.Columns("Anmerkungen").DataType)
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadTestFileVIProjektEndOfContentRowColIndexes()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\vi-projekte.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, "Alban", True)
@@ -692,6 +709,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(18, dt.Rows.Count, "Row-Length")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub ReadTestFileQnA()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\QuestsNAnswers.xlsx")
             Dim ds As DataSet = CompuMaster.Data.XlsEpplus.ReadDataSetFromXlsFile(file, True)
@@ -699,6 +717,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(35, ds.Tables(1).Rows.Count, "Row-Length")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test> Public Sub ReadTestFileDuplicateColumnNames()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\DuplicateColumnNames.xlsx")
             Dim dt As DataTable = CompuMaster.Data.XlsEpplus.ReadDataTableFromXlsFile(file, 1, True)
@@ -706,6 +725,7 @@ Namespace CompuMaster.Test.Data
             Console.WriteLine(CompuMaster.Data.DataTables.ConvertToPlainTextTableFixedColumnWidths(dt))
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test> Public Sub ReadTestFileDuplicateColumnNamesIntoTargetTable()
             Dim file As String = GlobalTestSetup.PathToTestFiles("testfiles\DuplicateColumnNames.xlsx")
 

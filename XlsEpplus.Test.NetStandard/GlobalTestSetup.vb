@@ -5,8 +5,6 @@ Imports NUnit.Framework
 Imports NUnit.Framework.Interfaces
 Imports NUnit.Framework.Internal.Commands
 
-<Assembly: AutoIgnoreOnNonWindowsNativeLoadFailure()>
-
 Namespace CompuMaster.Test.Data
 
     Public NotInheritable Class GlobalTestSetup
@@ -19,7 +17,7 @@ Namespace CompuMaster.Test.Data
 
     End Class
 
-    <AttributeUsage(AttributeTargets.Assembly Or AttributeTargets.Class Or AttributeTargets.Method, AllowMultiple:=False, Inherited:=True)>
+    <AttributeUsage(AttributeTargets.Method, AllowMultiple:=False, Inherited:=True)>
     Public NotInheritable Class AutoIgnoreOnNonWindowsNativeLoadFailureAttribute
         Inherits NUnitAttribute
         Implements IWrapTestMethod

@@ -20,6 +20,7 @@ Namespace CompuMaster.Test.Data
         End Property
 
 #If Not CI_Build Then
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadUnicode()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -69,6 +70,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual("من عنده تأشيرة سكن في أيّ من دول مجلس التعاون الخليجي", ReReadData.Rows(5)(0), "SaveAndReadUnicode #26")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadExtraLargeFields()
             Const HundredChars As String = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
             'Prepare test data
@@ -94,6 +96,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(HundredChars & HundredChars & HundredChars & HundredChars, ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFields #11")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadExtraFieldsWithLineBreaks()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -118,6 +121,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual("line 1" & System.Environment.NewLine & "line 2" & System.Environment.NewLine & "line 3" & System.Environment.NewLine & "line 4", ReReadData.Rows(0)(0), "SaveAndReadExtraLargeFieldsWithLineBreaks #11")
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadLastCell()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -152,6 +156,7 @@ Namespace CompuMaster.Test.Data
             ClassicAssert.AreEqual(1, ReReadData.Columns.Count, "SaveAndReadEmptyStates #11") 'but the column "string" has been defined by the column header
         End Sub
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadEmptyStates()
             'Prepare test data
             Dim data As New DataTable("testtable")
@@ -199,6 +204,7 @@ Namespace CompuMaster.Test.Data
             End If
         End Function
 
+        <AutoIgnoreOnNonWindowsNativeLoadFailure>
         <Test()> Public Sub SaveAndReadDBNull()
             'Prepare test data
             Dim data As New DataTable("testtable")
