@@ -42,7 +42,7 @@ Namespace CompuMaster.Test.Data
                 Try
                     Return _inner.Execute(context)
                 Catch ex As Exception When ShouldIgnore(ex)
-                    Assert.Ignore("Auto-ignored on non-Windows (native dependency missing): " & RootCause(ex).GetType().FullName)
+                    Assert.Ignore("Auto-ignored on non-Windows (native dependency missing or library support too limited in System.Drawing on non-windows platforms): " & ex.GetType().Name)
                     Throw
                 End Try
             End Function
