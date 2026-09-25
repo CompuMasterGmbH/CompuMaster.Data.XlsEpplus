@@ -3,10 +3,10 @@
 	<PropertyGroup>
 		<RootNamespace></RootNamespace>
 		<TargetFrameworks>netstandard2.0;netcoreapp3.1;net6.0;net48;net45</TargetFrameworks>
-		<Version>3.0.2025.1230</Version>
+		<Version>3.0.2026.924</Version>
 		<Authors>Jochen Wezel</Authors>
 		<Company>CompuMaster GmbH</Company>
-		<Copyright>2010-2025 CompuMaster GmbH</Copyright>
+		<Copyright>2010-2026 CompuMaster GmbH</Copyright>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/CompuMasterGmbH/CompuMaster.Data.XlsEpplus</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -85,7 +85,12 @@
 		<PackageIconUrl />
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="EPPlus" Version="4.5.3.2" />
+	  <PackageReference Include="EPPlus" Version="4.5.3.3" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netcoreapp3.1' Or '$(TargetFramework)' == 'net6.0'">
+	  <PackageReference Include="System.Drawing.Common" Version="4.7.2" />
+	  <PackageReference Include="System.Text.Encodings.Web" Version="4.7.2" />
+	  <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="XlsEpplus.vb">
